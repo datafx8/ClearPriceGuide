@@ -61,25 +61,24 @@
         }
         
         /* Hero Section */
+       /* Hero section background updated to use pricedoctorbackground.png */
         .hero {
-            background: linear-gradient(135deg, rgba(240, 248, 255, 0.95), rgba(230, 240, 250, 0.95)),
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23e6f0fa" width="1200" height="800"/></svg>');
-            background-size: cover;
-            background-position: center;
-            padding: 80px 20px 100px;
-            text-align: center;
-            position: relative;
+        background: url('../pricedoctorbackground.png') no-repeat center center;
+        background-size: cover;
+        padding: 80px 20px 100px;
+        text-align: center;
+        position: relative;
         }
         
         .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.8) 100%);
-            pointer-events: none;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.8) 100%);
+        pointer-events: none;
         }
         
         .hero-content {
@@ -97,15 +96,13 @@
             margin-bottom: 40px;
         }
         
+          /* .logo-icon definition updated to use pricedoctorlogo.png */
         .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+        width: 60px;
+        height: 60px;
+        background: url('../pricedoctorlogo.png') no-repeat center center;
+        background-size: contain;
+        border-radius: 12px;
         }
         
         .logo-icon::before {
@@ -418,7 +415,7 @@
                     <div class="tagline">Find Care. Compare Cost. Save Thousands.</div>
                 </div>
             </div>
-            <h1><span class="highlight">PriceDoctor:</span> Your Prescription for<br>Smarter Healthcare Costs</h1>
+            <h1><span class="highlight">PriceDoctor:</span> Your Prescription for<br>Rising Healthcare Costs</h1>
             <p>Find Quality Care, Compare Transparent Prices, and Save Thousands.</p>
             <a href="#article" class="cta-button">Learn How to Save Now</a>
         </div>
