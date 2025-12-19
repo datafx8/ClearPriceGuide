@@ -10,6 +10,7 @@ app.use(express.json());
 
 // Simple in-memory storage for email submissions (replace with database later)
 const submissions = [];
+const feedbackData = [];
 
 // Routes
 app.get('/', (req, res) => {
@@ -22,6 +23,33 @@ app.get('/thank-you', (req, res) => {
 
 app.post('/api/submit', (req, res) => {
   const { email, name } = req.body;
+
+
+// Feedback endpoint for price comparison interest
+app.post('/api/feedback', (req, res) => {
+  const { interest, detailedFeedback, zipCode, timestamp } = req.body;
+  
+  if (!interest) {
+    return res.status(400).json({ error: 'Interest level required' });
+  }
+  
+  // Store feedback
+  feedbackData.push({
+    interest,
+    detailedFeedback: detailedFeedback || '',
+    zipCode: zipCode || null,
+    timestamp: timestamp || new Date().toISOString()
+  });
+  
+  console.log('New feedback:', { 
+    interest, 
+    hasDetails: !!detailedFeedback, 
+    hasZip: !!zipCode,
+    total: feedbackData.length 
+  });
+  
+  res.json({ success: true });
+});
   
   if (!email) {
     return res.status(400).json({ error: 'Email required' });
@@ -46,6 +74,38 @@ app.get('/admin/submissions', (req, res) => {
     submissions: submissions
   });
 });
+
+// Admin route to view feedback (protect this in production!)
+app.get('/admin/feedback', (req, res) => {
+  const summary = {
+    total: feedbackData.length,
+    breakdown: {
+      yes: feedbackData.filter(f => f.interest === 'yes').length,
+      no: feedbackData.filter(f => f.interest === 'no').length
+    },
+    detailedFeedback: feedbackData.filter(f => f.detailedFeedback).length,
+    withZipCode: feedbackData.filter(f => f.zipCode).length,
+    topZipCodes: getTopZipCodes(feedbackData),
+    allFeedback: feedbackData
+  };
+  
+  res.json(summary);
+});
+
+// Helper function to get top zip codes
+function getTopZipCodes(data) {
+  const zipCounts = {};
+  data.forEach(item => {
+    if (item.zipCode) {
+      zipCounts[item.zipCode] = (zipCounts[item.zipCode] || 0) + 1;
+    }
+  });
+  
+  return Object.entries(zipCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([zip, count]) => ({ zipCode: zip, count }));
+}
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
