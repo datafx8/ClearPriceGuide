@@ -439,7 +439,7 @@
             <header class="article-header">
                 <h2>Eight Ways to Save Money on Healthcare</h2>
                 <div class="meta">
-                    By PriceDoctor Team | Published December 17, 2024 | 8 min read
+                    Staff Writer - PriceDoctor Team | Published December 17, 2024 | 8 min read
                 </div>
             </header>
             
@@ -502,7 +502,7 @@
                 
                 <h2>3. Shop for the Best Prices with High Quality</h2>
                 
-                <p>You wouldn't buy a car without knowing the price and checking the quality of your purchase — why should the care you receive be any different? It is not always true that higher prices equal higher quality</p>
+                <p>You wouldn't buy a car without knowing the price and checking the quality of your purchase — why should the care you receive be any different? Higher prices do not alway equal higher quality.</p>
                 
                 <h3>How to Check Prices?</h3>
                 
@@ -547,27 +547,86 @@
                     </tbody>
                 </table>
                 
-                <p>Virtual visits and Urgent Care Facilities are much better about posting their prices directly on their website. They may use the same codes as a primary care visit or sometimes use codes for emergency care by the level of care and length of the visit.  Also, you will find in the pricing transparency files a breakdown by insurance providers as well as Self-Pay.</p>
-                
-                <p>Also often times, the prices listed will be for a specific insurance or self-pay, depending on your specifics, compare using the insurance you have or look at the self-pay price.</p>
+                <p>Virtual visits and Urgent Care Facilities are much better about posting their prices directly on their website. They may use the same codes as a primary care visit or sometimes use codes for emergency care by the level of care and length of the visit.  The prices listed will be for a specific insurance or self-pay, depending on your specifics, compare using the insurance you have or look at the self-pay price.</p>
                 
                 <h3>How to Check for Quality?</h3>
                 
                 <p>Check your insurance provider to see if they provide quality metrics and reviews, many do. Another great resource is <a href="https://www.healthgrades.com/" target="_blank">HealthGrades.com</a>.</p>
+
+                <!-- Interest Gauge Section -->
+<div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 30px; border-radius: 12px; margin: 30px 0; border-left: 5px solid #ff9800; box-shadow: 0 2px 10px rgba(255, 152, 0, 0.15);">
+    <h3 style="color: #e65100; margin-top: 0; font-size: 1.4rem;">💡 We're Building Something Better</h3>
+    <p style="font-size: 1.1rem; margin-bottom: 20px;"><strong>What if comparing healthcare prices was as easy as entering your zip code?</strong></p>
+    <p style="margin-bottom: 25px;">We're considering building a simple tool that lets you instantly compare procedure costs across providers in your area. No more hunting through confusing price lists—just enter your zip code and see transparent pricing.</p>
+    
+    <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <p style="font-weight: 600; color: #e65100; margin-bottom: 15px; font-size: 1.05rem;">Would you use this tool?</p>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+            <button onclick="recordInterest('yes')" style="flex: 1; min-width: 220px; max-width: 300px; padding: 18px 40px; background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(102, 187, 106, 0.3);">
+                👍 Yes, I'd Use This!
+            </button>
+            <button onclick="recordInterest('no')" style="flex: 1; min-width: 220px; max-width: 300px; padding: 18px 40px; background: linear-gradient(135deg, #ef5350 0%, #e57373 100%); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(239, 83, 80, 0.3);">
+                👎 Not Interested
+            </button>
+        </div>
+        <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 15px; background: #e8f5e9; color: #2e7d32; border-radius: 6px; font-weight: 500; text-align: center;">
+            ✓ Thanks for your feedback!
+        </div>
+        <div id="optionalFeedback" style="display: none; margin-top: 20px;">
+            <p id="feedbackPrompt" style="font-weight: 600; margin-bottom: 15px; color: #555; font-size: 1.05rem;"></p>
+            
+            <!-- Zip Code Input -->
+            <div style="margin-bottom: 15px;">
+                <label for="zipCode" style="display: block; font-weight: 500; color: #666; margin-bottom: 8px; font-size: 0.95rem;">
+                    📍 Your Zip Code <span style="color: #999; font-weight: 400;">(optional, but helps us prioritize areas)</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="zipCode" 
+                    placeholder="e.g., 71201" 
+                    maxlength="5"
+                    pattern="[0-9]{5}"
+                    style="width: 150px; padding: 10px 15px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 1rem; font-family: inherit;"
+                />
+            </div>
+            
+            <!-- Feedback Textarea -->
+            <div style="margin-bottom: 15px;">
+                <label for="feedbackText" style="display: block; font-weight: 500; color: #666; margin-bottom: 8px; font-size: 0.95rem;">
+                    💬 Your Thoughts <span style="color: #999; font-weight: 400;">(optional)</span>
+                </label>
+                <textarea 
+                    id="feedbackText" 
+                    placeholder="" 
+                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 0.95rem; min-height: 100px; font-family: inherit; resize: vertical;"
+                ></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="submitDetailedFeedback()" style="padding: 12px 30px; background: #2d7ac7; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem;">
+                    Submit Feedback
+                </button>
+                <button onclick="skipFeedback()" style="padding: 12px 30px; background: #90a4ae; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem;">
+                    Skip
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
                 
                 <h2>4. Choose In-Network Providers / Check for a Self-Pay Discounts</h2>
 
-                <h3>Insured</h3>
+                <h3>If You Have Insurance</h3>
                 
                 <p>Check that all of the physicians you will see are covered by your insurance provider and any labs or diagnostic imaging are in network as well. Be sure to check and re-check before visits because eligibility for coverages do change over time and can leave you with a hefty bill.
 
-                <h3>Self-Pay or Under-Insured</h3>
+                <h3>If You are Self Insuranced or Under-Insured</h3>
                 
                 <p>If you don't have insurance or are underinsured, check with the billing office to see if they provide a self-pay discount. Often times this is also listed on the billing pages for the provider.</p>
                 
                 <h2>5. Understand Your Insurance Plan</h2>
                 
-                <p>There is not time to cover the variety of plan options out there. Be sure to check your insurance plan carefully for the amount you are responsible to pay. Some basics to be aware of:</p>
+                <p>There are a variety of plan options out there. Be sure to check your insurance plan carefully for the amount you are responsible to pay. Some basics to be aware of:</p>
                 
                 <p><strong>Co-Pay</strong> — an amount you are responsible to pay for each visit (e.g. $25 co-pay)</p>
                 
@@ -575,7 +634,7 @@
                 
                 <p><strong>Deductible</strong> — often this is an amount per individual or per family on an annual basis that you must pay before insurance will pay their part.</p>
                 
-                <p>One area of significant savings is in the type of plan you choose - this is content for another article in the future, but significant savings can be found in shopping for an insurance provider and plan that meets you're specific health needs.</p>
+                <p>One area of significant savings is in the type of plan you choose, content for another article, significant savings can be found by shopping for an insurance provider and plan that meets you're specific health needs.</p>
                 
                 <h2>6. Use Your Health Savings Account (HSA)</h2>
                 
@@ -587,8 +646,8 @@
                 
                 <ol style="margin-left: 20px; margin-bottom: 20px;">
                     <li style="margin-bottom: 10px;"><strong>Be Patient.</strong> Billing can take some time.</li>
-                    <li style="margin-bottom: 10px;"><strong>Wait to Pay.</strong> Until insurance is processed.</li>
-                    <li style="margin-bottom: 10px;"><strong>Review your bill. Carefully review it for accuracy.</strong></li>
+                    <li style="margin-bottom: 10px;"><strong>Wait to Pay.</strong> Wait until insurance is processed.</li>
+                    <li style="margin-bottom: 10px;"><strong>Review your bill.</strong> Carefully review it for accuracy.</li>
                     <li style="margin-bottom: 10px;"><strong>Contact Insurance First.</strong> Contact your insurance first and seek to understand. Often times insurers will work on your behalf to resolve billing problems - ask them to help.</li>
                     <li style="margin-bottom: 10px;"><strong>Contact the Billing Office.</strong> Be nice. Ask for an explanation and compare to what your insurance payer stated.</li>
                     <li style="margin-bottom: 10px;"><strong>Negotiate.</strong> — if the price charged is different than the price submitted, ask why and if the price listed on their website can be used? Ask what the self-pay price would be — sometimes the price of self-pay would be less than you pay with insurance. Ask if there is a financial plan where you can pay part over time.</li>
@@ -599,10 +658,10 @@
                 <p>Ultimately poor health practices affect how you feel and impact your long term cost of care. Here are some common areas to improve your health:</p>
                 
                 <ol style="margin-left: 20px; margin-bottom: 20px;">
-                    <li style="margin-bottom: 10px;"><strong>Nutrition.</strong> Replace your processed foods with raw and non-processed foods</li>
+                    <li style="margin-bottom: 10px;"><strong>Nutrition.</strong> Replace your processed foods with raw and non-processed foods.</li>
                     <li style="margin-bottom: 10px;"><strong>Weight.</strong> Obesity is a huge factor in health. Seek help reducing your weight through exercise and nutrition.</li>
                     <li style="margin-bottom: 10px;"><strong>Stop or reduce smoking.</strong> Smoking and vaping have a long term impact on your health</li>
-                    <li style="margin-bottom: 10px;"><strong>Schedule Preventative Visits.</strong> Many preventative checks are free, be sure to have your health checked regularly</li>
+                    <li style="margin-bottom: 10px;"><strong>Schedule Preventative Visits.</strong> Many preventative checks are free, be sure to have your health checked regularly.</li>
                 </ol>
                 
                 <!-- FAQ Section -->
@@ -691,6 +750,102 @@
                 behavior: 'smooth' 
             });
         });
+
+ // Interest gauge functionality
+let userInterest = null;
+
+async function recordInterest(response) {
+    userInterest = response;
+    
+    // Visual feedback
+    const buttons = document.querySelectorAll('[onclick^="recordInterest"]');
+    buttons.forEach(btn => {
+        btn.style.opacity = '0.5';
+        btn.disabled = true;
+    });
+    
+    // Show thank you message
+    document.getElementById('feedbackMessage').style.display = 'block';
+    
+    // Customize prompt and placeholder based on response
+    const promptText = document.getElementById('feedbackPrompt');
+    const textArea = document.getElementById('feedbackText');
+    
+    if (response === 'yes') {
+        promptText.textContent = '🎉 Awesome! Help us build the right tool for you:';
+        textArea.placeholder = 'E.g., Which procedures would you want to compare? What information is most important? Any specific features you\'d love to see?';
+    } else {
+        promptText.textContent = '💭 We understand. Can you help us understand why?';
+        textArea.placeholder = 'E.g., I prefer to call providers directly, I don\'t trust online pricing, I rarely need medical care, etc.';
+    }
+    
+    // Show feedback box after a brief delay
+    setTimeout(() => {
+        document.getElementById('optionalFeedback').style.display = 'block';
+    }, 500);
+    
+    // Send initial response to server
+    try {
+        await fetch('/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                interest: response,
+                timestamp: new Date().toISOString()
+            })
+        });
+    } catch (error) {
+        console.error('Feedback error:', error);
+    }
+}
+
+async function submitDetailedFeedback() {
+    const feedbackText = document.getElementById('feedbackText').value;
+    const zipCode = document.getElementById('zipCode').value;
+    
+    // Validate zip code if provided
+    if (zipCode && !/^\d{5}$/.test(zipCode)) {
+        alert('Please enter a valid 5-digit zip code, or leave it blank.');
+        return;
+    }
+    
+    // At least one field should have content
+    if (!feedbackText.trim() && !zipCode.trim()) {
+        alert('Please provide your zip code or feedback, or click Skip.');
+        return;
+    }
+    
+    try {
+        await fetch('/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                interest: userInterest,
+                detailedFeedback: feedbackText,
+                zipCode: zipCode || null,
+                timestamp: new Date().toISOString()
+            })
+        });
+        
+        document.getElementById('feedbackText').value = '';
+        document.getElementById('zipCode').value = '';
+        document.getElementById('feedbackMessage').innerHTML = '✓ Thanks for the detailed feedback! This really helps us build something useful.';
+        document.getElementById('optionalFeedback').style.display = 'none';
+        
+    } catch (error) {
+        console.error('Detailed feedback error:', error);
+        alert('Something went wrong. Please try again.');
+    }
+}
+
+function skipFeedback() {
+    document.getElementById('optionalFeedback').style.display = 'none';
+    document.getElementById('feedbackMessage').innerHTML = '✓ Thanks for your feedback!';
+}
     </script>
 </body>
 </html>
