@@ -57,7 +57,15 @@ const submissionLimiter = rateLimit({
 
 // Simple in-memory storage (replace with database in production)
 const submissions = [];
-const feedbackData = [];
+
+// DB connection
+const { Pool } = require('pg');
+
+// Use the environment variable Render provides
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false } // Required for Render connections
+});
 
 // Security: Simple authentication for admin endpoints
 // In production, use proper authentication (JWT, OAuth, etc.)
@@ -126,6 +134,7 @@ app.post('/api/submit',
 );
 
 // Feedback endpoint with validation
+// 1. Added 'async' to the function signature
 app.post('/api/feedback',
   submissionLimiter,
   [
@@ -133,7 +142,7 @@ app.post('/api/feedback',
     body('detailedFeedback').optional().isLength({ max: 2000 }).trim(),
     body('zipCode').optional().matches(/^\d{5}$/).withMessage('Zip code must be 5 digits'),
   ],
-  (req, res) => {
+  async (req, res) => { // <-- Added async here
     // Check validation results
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -145,23 +154,38 @@ app.post('/api/feedback',
     // Additional sanitization
     const sanitizedFeedback = sanitizeInput(detailedFeedback || '');
 
-    // Store feedback
-    feedbackData.push({
-      interest,
-      detailedFeedback: sanitizedFeedback,
-      zipCode: zipCode || null,
-      timestamp: new Date().toISOString(),
-      ip: req.ip // Store IP for abuse tracking
-    });
+    try {
+      // 2. Replace .push with SQL Insert
+      const queryText = `
+        INSERT INTO feedback (interest, detailed_feedback, zip_code, timestamp, ip)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id
+      `;
+      
+      const values = [
+        interest, 
+        sanitizedFeedback, 
+        zipCode || null, 
+        new Date().toISOString(), 
+        req.ip
+      ];
 
-    console.log('New feedback:', {
-      interest,
-      hasDetails: !!sanitizedFeedback,
-      hasZip: !!zipCode,
-      total: feedbackData.length
-    });
+      const result = await pool.query(queryText, values);
 
-    res.json({ success: true });
+      console.log('New feedback saved to DB. ID:', result.rows[0].id, {
+        interest,
+        hasDetails: !!sanitizedFeedback,
+        hasZip: !!zipCode
+      });
+
+      res.json({ success: true });
+
+    } catch (err) {
+      console.error('Database Error:', err);
+      // Still send a success to the user so the UI doesn't break, 
+      // or send a 500 if you want them to try again.
+      res.status(500).json({ error: 'Internal server error saving feedback' });
+    }
   }
 );
 
@@ -173,20 +197,22 @@ app.get('/admin/submissions', requireAdminAuth, (req, res) => {
   });
 });
 
-app.get('/admin/feedback', requireAdminAuth, (req, res) => {
-  const summary = {
-    total: feedbackData.length,
-    breakdown: {
-      yes: feedbackData.filter(f => f.interest === 'yes').length,
-      no: feedbackData.filter(f => f.interest === 'no').length
-    },
-    detailedFeedback: feedbackData.filter(f => f.detailedFeedback).length,
-    withZipCode: feedbackData.filter(f => f.zipCode).length,
-    topZipCodes: getTopZipCodes(feedbackData),
-    allFeedback: feedbackData
-  };
+app.get('/admin/feedback', requireAdminAuth, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM feedback ORDER BY timestamp DESC');
+    const rows = result.rows;
 
-  res.json(summary);
+    res.json({
+      total: rows.length,
+      breakdown: {
+        yes: rows.filter(f => f.interest === 'yes').length,
+        no: rows.filter(f => f.interest === 'no').length
+      },
+      allFeedback: rows
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch' });
+  }
 });
 
 // Helper function
