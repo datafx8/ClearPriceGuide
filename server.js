@@ -157,7 +157,7 @@ app.post('/api/feedback',
     try {
       // 2. Replace .push with SQL Insert
       const queryText = `
-        INSERT INTO feedback (interest, detailed_feedback, zip_code, timestamp, ip)
+        INSERT INTO feedback (answer, detailed_feedback, zip_code, timestamp, ip)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING id
       `;
