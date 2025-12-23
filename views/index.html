@@ -708,40 +708,6 @@
     </div>
     
     <script>
-        document.getElementById('ctaForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const form = e.target;
-            const button = form.querySelector('button');
-            const successMessage = document.getElementById('successMessage');
-            const email = document.getElementById('emailInput').value;
-            const name = document.getElementById('nameInput').value;
-            
-            button.disabled = true;
-            button.textContent = 'Submitting...';
-            
-            try {
-                const response = await fetch('/api/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, name })
-                });
-                
-                if (response.ok) {
-                    successMessage.style.display = 'block';
-                    form.reset();
-                } else {
-                    alert('Something went wrong. Please try again.');
-                }
-            } catch (error) {
-                alert('Something went wrong. Please try again.');
-            } finally {
-                button.disabled = false;
-                button.textContent = 'Get Early Access';
-            }
-        });
         
         // Smooth scroll for CTA button
         document.querySelector('.cta-button').addEventListener('click', (e) => {
