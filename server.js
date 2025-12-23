@@ -8,6 +8,9 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Tell Express to trust Render's load balancer
+app.set('trust proxy', 1);
+
 // Security: Helmet sets various HTTP headers for security
 app.use(helmet({
   contentSecurityPolicy: {
@@ -150,6 +153,7 @@ app.post('/api/feedback',
     }
 
     const { interest, detailedFeedback, zipCode } = req.body;
+    const userIp = req.ip; // <--- This extracts the IP address
 
     // Additional sanitization
     const sanitizedFeedback = sanitizeInput(detailedFeedback || '');
@@ -167,7 +171,7 @@ app.post('/api/feedback',
         sanitizedFeedback, 
         zipCode || null, 
         new Date().toISOString(), 
-        req.ip
+        userIp // <--- This ensures the IP actually goes to the DB
       ];
 
       const result = await pool.query(queryText, values);
