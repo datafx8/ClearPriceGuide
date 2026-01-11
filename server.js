@@ -29,7 +29,7 @@ app.use(helmet({
 // In development, this allows all origins. In production, set your domain.
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? 'https://clearpriceguide.onrender.com/'  // Replace with your actual domain
+    ? 'https://pricedoctor.io/'  // Replace with your actual domain
     : '*',
   optionsSuccessStatus: 200
 };
