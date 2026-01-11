@@ -36,16 +36,48 @@
 </script>
     
 
-    <!-- Schema.org structured data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "PriceDoctor",
-      "description": "Your Prescription for Smarter Healthcare Costs",
-      "url": "https://yourdomain.com"
-    }
-    </script>
+<script type="application/ld-json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Healthcare Price Transparency",
+  "provider": {
+    "@type": "Organization",
+    "name": "PriceDoctor",
+    "url": "https://pricedoctor.io",
+    "logo": "https://pricedoctor.io/logo.svg",
+    "description": "An authoritative platform providing transparent healthcare pricing and cost-saving strategies.",
+    "sameAs": [
+      "https://x.com/PriceDoctorIo",
+      "https://linkedin.com/company/pricedoctor"
+  },
+  "areaServed": "US",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Healthcare Savings Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Medical Procedure Price Comparison"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Healthcare Cost Reduction Strategies"
+        }
+      }
+    ]
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://pricedoctor.io"
+  }
+}
+</script>
     
     <style>
         * {
@@ -136,9 +168,9 @@
 
        
         .logo-icon {
-            width: 500px;
-            height: 169px;
-            background: url('/logo.png') no-repeat center center;
+            width: 400px;
+            height: 100px;
+            background: url('/logo.svg') no-repeat center center;
             background-size: contain;
             border-radius: 12px; 
             display: flex;
