@@ -53,6 +53,63 @@
             display: flex;
             gap: 15px;
             align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .address-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 25px;
+        }
+        
+        .address-input-container input {
+            background: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            width: 200px;
+        }
+        
+        .address-input-container button {
+            background: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #1e5a9e;
+            font-weight: 600;
+        }
+        
+        .address-input-container button:hover {
+            background: #f0f0f0;
+        }
+        
+        .procedure-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 25px;
+        }
+        
+        .procedure-control label {
+            font-size: 0.9rem;
+        }
+        
+        .procedure-control select {
+            background: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            min-width: 200px;
         }
         
         .radius-control {
@@ -303,6 +360,10 @@
                 box-shadow: 0 2px 10px rgba(0,0,0,0.2);
                 cursor: pointer;
             }
+            
+            .address-input-container input {
+                width: 150px;
+            }
         }
         
         /* Custom marker styles */
@@ -341,6 +402,16 @@
                 <div class="logo-icon"></div>
             </div>
         <div class="header-controls">
+            <div class="address-input-container">
+                <input type="text" id="addressInput" placeholder="Enter address or zip code">
+                <button onclick="searchAddress()">Search</button>
+            </div>
+            <div class="procedure-control">
+                <label>Procedure:</label>
+                <select id="procedureSelect">
+                    <option value="">All Procedures</option>
+                </select>
+            </div>
             <div class="radius-control">
                 <label>Range:</label>
                 <select id="radiusSelect">
@@ -412,6 +483,7 @@
     let map;
     let userLocation = null;
     let currentRadius = 25;
+    let currentProcedure = '';
     let entities = [];
     let markers = [];
     let selectedEntity = null;
@@ -421,7 +493,15 @@
     // Initialize map on page load
     window.addEventListener('DOMContentLoaded', () => {
         initMap();
+        loadProcedures();
         getUserLocation();
+        
+        // Allow Enter key to trigger search
+        document.getElementById('addressInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchAddress();
+            }
+        });
     });
     
     function initMap() {
@@ -433,6 +513,23 @@
             attribution: '© OpenStreetMap contributors',
             maxZoom: 19
         }).addTo(map);
+    }
+    
+    async function loadProcedures() {
+        try {
+            const response = await fetch('/api/procedures');
+            const data = await response.json();
+            
+            const select = document.getElementById('procedureSelect');
+            data.procedures.forEach(procedure => {
+                const option = document.createElement('option');
+                option.value = procedure;
+                option.textContent = procedure;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading procedures:', error);
+        }
     }
     
     function getUserLocation() {
@@ -448,13 +545,7 @@
                     map.setView([userLocation.lat, userLocation.lng], 11);
                     
                     // Add user marker
-                    userMarker = L.marker([userLocation.lat, userLocation.lng], {
-                        icon: L.divIcon({
-                            className: 'user-marker',
-                            html: '<div style="background: #7cb342; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); font-size: 1.2rem;">📍</div>',
-                            iconSize: [30, 30]
-                        })
-                    }).addTo(map);
+                    addUserMarker();
                     
                     // Draw radius circle
                     updateRadiusCircle();
@@ -467,13 +558,74 @@
                 },
                 (error) => {
                     console.error('Geolocation error:', error);
-                    alert('Unable to get your location. Please enable location services.');
+                    alert('Unable to get your location. Please enter an address or zip code.');
                     document.getElementById('loading').style.display = 'none';
                 }
             );
         } else {
-            alert('Geolocation is not supported by your browser.');
+            alert('Geolocation is not supported by your browser. Please enter an address or zip code.');
             document.getElementById('loading').style.display = 'none';
+        }
+    }
+    
+    function addUserMarker() {
+        if (userMarker) {
+            map.removeLayer(userMarker);
+        }
+        
+        userMarker = L.marker([userLocation.lat, userLocation.lng], {
+            icon: L.divIcon({
+                className: 'user-marker',
+                html: '<div style="background: #7cb342; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); font-size: 1.2rem;">📍</div>',
+                iconSize: [30, 30]
+            })
+        }).addTo(map);
+    }
+    
+    async function searchAddress() {
+        const address = document.getElementById('addressInput').value.trim();
+        
+        if (!address) {
+            alert('Please enter an address or zip code');
+            return;
+        }
+        
+        document.getElementById('loading').style.display = 'block';
+        
+        try {
+            // Use Nominatim geocoding API to convert address to coordinates
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=us&limit=1`);
+            const data = await response.json();
+            
+            if (data && data.length > 0) {
+                const result = data[0];
+                userLocation = {
+                    lat: parseFloat(result.lat),
+                    lng: parseFloat(result.lon)
+                };
+                
+                // Center map on new location
+                map.setView([userLocation.lat, userLocation.lng], 11);
+                
+                // Update user marker
+                addUserMarker();
+                
+                // Update radius circle
+                updateRadiusCircle();
+                
+                // Update location info
+                updateLocationInfo();
+                
+                // Fetch entities
+                await fetchEntities();
+            } else {
+                document.getElementById('loading').style.display = 'none';
+                alert('Address not found. Please try a different address or zip code.');
+            }
+        } catch (error) {
+            console.error('Geocoding error:', error);
+            document.getElementById('loading').style.display = 'none';
+            alert('Error searching for address. Please try again.');
         }
     }
     
@@ -514,7 +666,8 @@
                 body: JSON.stringify({
                     lat: userLocation.lat,
                     lng: userLocation.lng,
-                    radius: currentRadius
+                    radius: currentRadius,
+                    procedureType: currentProcedure
                 })
             });
             
@@ -624,6 +777,16 @@
         currentRadius = parseInt(e.target.value);
         updateRadiusCircle();
         updateLocationInfo();
+        
+        if (userLocation) {
+            document.getElementById('loading').style.display = 'block';
+            fetchEntities();
+        }
+    });
+    
+    // Procedure change handler
+    document.getElementById('procedureSelect').addEventListener('change', (e) => {
+        currentProcedure = e.target.value;
         
         if (userLocation) {
             document.getElementById('loading').style.display = 'block';
