@@ -260,8 +260,8 @@ app.get('/map', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'map.html'));
 });
 
-// Hospital search endpoint - connects to your PostgreSQL database
-app.post('/api/hospitals',
+// Entity search endpoint - connects to your PostgreSQL database
+app.post('/api/entities',
   submissionLimiter,
   [
     body('lat').isFloat({ min: -90, max: 90 }),
@@ -276,87 +276,51 @@ app.post('/api/hospitals',
 
     const { lat, lng, radius } = req.body;
 
-    // TODO: Replace this with actual PostgreSQL query
-    // This is mock data for demonstration
-    
-    /* EXAMPLE PostgreSQL QUERY YOU'LL USE:
-    
-    const query = `
-      SELECT 
-        id,
-        name,
-        address,
-        latitude as lat,
-        longitude as lng,
-        phone,
-        rating,
-        price,
-        (
-          3959 * acos(
-            cos(radians($1)) * cos(radians(latitude)) * 
-            cos(radians(longitude) - radians($2)) + 
-            sin(radians($1)) * sin(radians(latitude))
-          )
-        ) AS distance
-      FROM hospitals
-      WHERE (
-        3959 * acos(
-          cos(radians($1)) * cos(radians(latitude)) * 
-          cos(radians(longitude) - radians($2)) + 
-          sin(radians($1)) * sin(radians(latitude))
-        )
-      ) <= $3
-      ORDER BY distance
-      LIMIT 50
-    `;
-    
-    const result = await pool.query(query, [lat, lng, radius]);
-    res.json({ hospitals: result.rows });
-    */
-
-    // Mock data for now - replace with real database query above
-    const mockHospitals = generateMockHospitals(lat, lng, radius);
-    res.json({ hospitals: mockHospitals });
+    try {
+      // PostgreSQL query using Haversine formula
+      const query = `
+        SELECT 
+          e.id,
+          e.name,
+          e.address,
+          e.latitude as lat,
+          e.longitude as lng,
+          e.phone,
+          e.rating,
+          e.price,
+          e.parent_entity_id,
+          p.name as parent_name,
+          (
+            3959 * acos(
+              cos(radians($1)) * cos(radians(e.latitude)) * 
+              cos(radians(e.longitude) - radians($2)) + 
+              sin(radians($1)) * sin(radians(e.latitude))
+            )
+          ) AS distance
+        FROM entities e
+        LEFT JOIN entities p ON e.parent_entity_id = p.id
+        WHERE e.price > 0
+          AND (
+            3959 * acos(
+              cos(radians($1)) * cos(radians(e.latitude)) * 
+              cos(radians(e.longitude) - radians($2)) + 
+              sin(radians($1)) * sin(radians(e.latitude))
+            )
+          ) <= $3
+        ORDER BY distance
+        LIMIT 50
+      `;
+      
+      const result = await pool.query(query, [lat, lng, radius]);
+      
+      res.json({ entities: result.rows });
+      
+    } catch (error) {
+      console.error('Database query error:', error);
+      res.status(500).json({ error: 'Failed to fetch entities' });
+    }
   }
 );
-
-// Generate mock hospital data (remove this when connecting to real database)
-function generateMockHospitals(centerLat, centerLng, radius) {
-  const hospitals = [];
-  const names = [
-    'City General Hospital',
-    'Memorial Medical Center',
-    'St. Mary\'s Hospital',
-    'Community Health Center',
-    'Regional Medical Center',
-    'University Hospital',
-    'Mercy Hospital',
-    'Good Samaritan Hospital'
-  ];
-
-  for (let i = 0; i < 8; i++) {
-    // Generate random location within radius
-    const angle = Math.random() * 2 * Math.PI;
-    const distance = Math.random() * radius;
-    const latOffset = (distance / 69) * Math.cos(angle);
-    const lngOffset = (distance / (69 * Math.cos(centerLat * Math.PI / 180))) * Math.sin(angle);
-
-    hospitals.push({
-      id: i + 1,
-      name: names[i],
-      address: `${100 + i * 50} Medical Drive, Suite ${i + 1}00`,
-      lat: centerLat + latOffset,
-      lng: centerLng + lngOffset,
-      phone: `(555) ${Math.floor(Math.random() * 900 + 100)}-${Math.floor(Math.random() * 9000 + 1000)}`,
-      rating: (3.5 + Math.random() * 1.5).toFixed(1),
-      price: Math.floor(Math.random() * 300 + 200),
-      distance: distance
-    });
-  }
-
-  return hospitals.sort((a, b) => a.distance - b.distance);
-}
-
 // Security: Handle 404s
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });
