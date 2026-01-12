@@ -260,6 +260,7 @@ app.get('/map', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'map.html'));
 });
 
+
 // Entity search endpoint - connects to your PostgreSQL database
 app.post('/api/entities',
   submissionLimiter,
@@ -267,6 +268,7 @@ app.post('/api/entities',
     body('lat').isFloat({ min: -90, max: 90 }),
     body('lng').isFloat({ min: -180, max: 180 }),
     body('radius').isInt({ min: 1, max: 200 }),
+    body('procedureType').optional().isString().trim(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -274,9 +276,18 @@ app.post('/api/entities',
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { lat, lng, radius } = req.body;
+    const { lat, lng, radius, procedureType } = req.body;
 
     try {
+      // Build WHERE clause based on whether procedure is selected
+      let whereClause = 'WHERE e.price > 0';
+      const queryParams = [lat, lng, radius];
+      
+      if (procedureType) {
+        whereClause += ' AND e.procedure_type = $4';
+        queryParams.push(procedureType);
+      }
+      
       // PostgreSQL query using Haversine formula
       const query = `
         SELECT 
@@ -288,6 +299,7 @@ app.post('/api/entities',
           e.phone,
           e.rating,
           e.price,
+          e.procedure_type,
           e.parent_entity_id,
           p.name as parent_name,
           (
@@ -299,7 +311,7 @@ app.post('/api/entities',
           ) AS distance
         FROM entities e
         LEFT JOIN entities p ON e.parent_entity_id = p.id
-        WHERE e.price > 0
+        ${whereClause}
           AND (
             3959 * acos(
               cos(radians($1)) * cos(radians(e.latitude)) * 
@@ -311,7 +323,7 @@ app.post('/api/entities',
         LIMIT 50
       `;
       
-      const result = await pool.query(query, [lat, lng, radius]);
+      const result = await pool.query(query, queryParams);
       
       res.json({ entities: result.rows });
       
@@ -321,6 +333,28 @@ app.post('/api/entities',
     }
   }
 );
+
+// Get unique procedures endpoint
+app.get('/api/procedures', async (req, res) => {
+  try {
+    const query = `
+      SELECT DISTINCT procedure_type
+      FROM entities
+      WHERE procedure_type IS NOT NULL
+        AND procedure_type != ''
+        AND procedure_type != 'Health System'
+      ORDER BY procedure_type
+    `;
+    
+    const result = await pool.query(query);
+    res.json({ procedures: result.rows.map(row => row.procedure_type) });
+    
+  } catch (error) {
+    console.error('Error fetching procedures:', error);
+    res.status(500).json({ error: 'Failed to fetch procedures' });
+  }
+});
+
 // Security: Handle 404s
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });
