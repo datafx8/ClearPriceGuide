@@ -234,20 +234,6 @@ function getTopZipCodes(data) {
     .map(([zip, count]) => ({ zipCode: zip, count }));
 }
 
-// Security: Handle 404s
-app.use((req, res) => {
-  res.status(404).json({ error: 'Not found' });
-});
-
-// Security: Error handler (don't leak stack traces in production)
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ 
-    error: process.env.NODE_ENV === 'production' 
-      ? 'Internal server error' 
-      : err.message 
-  });
-});
 
 // Map page route
 app.get('/map', (req, res) => {
@@ -350,6 +336,22 @@ function generateMockHospitals(centerLat, centerLng, radius) {
 
   return hospitals.sort((a, b) => a.distance - b.distance);
 }
+
+// Security: Handle 404s
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
+// Security: Error handler (don't leak stack traces in production)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    error: process.env.NODE_ENV === 'production' 
+      ? 'Internal server error' 
+      : err.message 
+  });
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
