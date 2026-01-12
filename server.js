@@ -249,6 +249,108 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Map page route
+app.get('/map', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'map.html'));
+});
+
+// Hospital search endpoint - connects to your PostgreSQL database
+app.post('/api/hospitals',
+  submissionLimiter,
+  [
+    body('lat').isFloat({ min: -90, max: 90 }),
+    body('lng').isFloat({ min: -180, max: 180 }),
+    body('radius').isInt({ min: 1, max: 200 }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { lat, lng, radius } = req.body;
+
+    // TODO: Replace this with actual PostgreSQL query
+    // This is mock data for demonstration
+    
+    /* EXAMPLE PostgreSQL QUERY YOU'LL USE:
+    
+    const query = `
+      SELECT 
+        id,
+        name,
+        address,
+        latitude as lat,
+        longitude as lng,
+        phone,
+        rating,
+        price,
+        (
+          3959 * acos(
+            cos(radians($1)) * cos(radians(latitude)) * 
+            cos(radians(longitude) - radians($2)) + 
+            sin(radians($1)) * sin(radians(latitude))
+          )
+        ) AS distance
+      FROM hospitals
+      WHERE (
+        3959 * acos(
+          cos(radians($1)) * cos(radians(latitude)) * 
+          cos(radians(longitude) - radians($2)) + 
+          sin(radians($1)) * sin(radians(latitude))
+        )
+      ) <= $3
+      ORDER BY distance
+      LIMIT 50
+    `;
+    
+    const result = await pool.query(query, [lat, lng, radius]);
+    res.json({ hospitals: result.rows });
+    */
+
+    // Mock data for now - replace with real database query above
+    const mockHospitals = generateMockHospitals(lat, lng, radius);
+    res.json({ hospitals: mockHospitals });
+  }
+);
+
+// Generate mock hospital data (remove this when connecting to real database)
+function generateMockHospitals(centerLat, centerLng, radius) {
+  const hospitals = [];
+  const names = [
+    'City General Hospital',
+    'Memorial Medical Center',
+    'St. Mary\'s Hospital',
+    'Community Health Center',
+    'Regional Medical Center',
+    'University Hospital',
+    'Mercy Hospital',
+    'Good Samaritan Hospital'
+  ];
+
+  for (let i = 0; i < 8; i++) {
+    // Generate random location within radius
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * radius;
+    const latOffset = (distance / 69) * Math.cos(angle);
+    const lngOffset = (distance / (69 * Math.cos(centerLat * Math.PI / 180))) * Math.sin(angle);
+
+    hospitals.push({
+      id: i + 1,
+      name: names[i],
+      address: `${100 + i * 50} Medical Drive, Suite ${i + 1}00`,
+      lat: centerLat + latOffset,
+      lng: centerLng + lngOffset,
+      phone: `(555) ${Math.floor(Math.random() * 900 + 100)}-${Math.floor(Math.random() * 9000 + 1000)}`,
+      rating: (3.5 + Math.random() * 1.5).toFixed(1),
+      price: Math.floor(Math.random() * 300 + 200),
+      distance: distance
+    });
+  }
+
+  return hospitals.sort((a, b) => a.distance - b.distance);
+}
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Visit: http://localhost:${PORT}`);
