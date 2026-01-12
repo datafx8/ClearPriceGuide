@@ -16,11 +16,31 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'","'unsafe-inline'", "https://www.googletagmanager.com"],
-      connectSrc: ["'self'", "https://www.google-analytics.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'","https://www.googletagmanager.com"],
+      styleSrc: [
+        "'self'", 
+        "'unsafe-inline'", 
+        "https://www.googletagmanager.com",
+        "https://cdnjs.cloudflare.com"
+      ],
+      scriptSrc: [
+        "'self'", 
+        "'unsafe-inline'",
+        "https://www.googletagmanager.com",
+        "https://cdnjs.cloudflare.com"
+      ],
       scriptSrcAttr: ["'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:", "https://www.googletagmanager.com"],
+      imgSrc: [
+        "'self'", 
+        "data:", 
+        "https:", 
+        "https://www.googletagmanager.com",
+        "https://*.tile.openstreetmap.org"
+      ],
+      connectSrc: [
+        "'self'", 
+        "https://www.google-analytics.com",
+        "https://nominatim.openstreetmap.org"
+      ],
     },
   },
 }));
