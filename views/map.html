@@ -37,6 +37,17 @@
             font-size: 1.3rem;
             font-weight: 700;
         }
+        .logo-icon {
+            width: 200px;
+            height: 50px;
+            background: url('/logo.svg') no-repeat center center;
+            background-size: contain;
+            border-radius: 12px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        } 
         
         .header-controls {
             display: flex;
@@ -326,7 +337,9 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <div class="logo">🏥 PriceDoctor</div>
+        <div class="logo">
+                <div class="logo-icon"></div>
+            </div>
         <div class="header-controls">
             <div class="radius-control">
                 <label>Range:</label>
