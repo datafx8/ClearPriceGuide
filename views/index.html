@@ -305,7 +305,7 @@
         
         <a href="/resources.html" class="cta-button" style="display: block; text-align: center; margin-top: 50px;">Read Full Guide with 8 Money-Saving Strategies →</a>
         
-        <!-- Interest Gauge -->
+        <!--
         <div class="interest-section">
             <h3>💡 Help Us Build Better Tools</h3>
             <p style="margin-bottom: 10px;"><strong>Would you use a tool that instantly compares prices across all providers in your zip code?</strong></p>
@@ -318,6 +318,7 @@
                 ✓ Thanks for your feedback!
             </div>
         </div>
+        -->
     </section>
     
     <!-- CTA -->
@@ -367,3 +368,4 @@
     document.getElementById('procedureSelect').addEventListener('change',e=>{currentProcedure=e.target.value;if(userLocation){document.getElementById('loading').style.display='block';fetchEntities();}});
     
     async function recordInterest(response){document.querySelectorAll('.interest-buttons button').forEach(b=>{b.disabled=true;b.style.opacity='0.5';});document.getElementById('feedbackMessage').style.display='block';try{await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({interest:response,timestamp:new Date().toISOString()})});}catch(e){console.error(e);}}
+</script>
