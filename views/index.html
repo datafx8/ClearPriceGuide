@@ -3,849 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
-    <title>PriceDoctor: Your Prescription for Smarter Healthcare Costs</title>
-    <meta name="description" content="Find Quality Care, Compare Transparent Prices, and Save Thousands. Learn 8 proven strategies to reduce healthcare costs.">
-    <meta name="keywords" content="healthcare costs, price transparency, save money on healthcare, health insurance tips, HSA, medical bills, 2026 healthcare">
-    <meta name="author" content="PriceDoctor">
-    <meta name="robots" content="index, follow">
+    <title>PriceDoctor: Compare Hospital Prices & Save on Healthcare</title>
+    <meta name="description" content="Compare transparent hospital prices in your area and learn 8 proven strategies to save thousands on healthcare costs.">
+    <meta name="keywords" content="hospital prices, healthcare costs, price comparison, transparent pricing, save money healthcare">
     <link rel="canonical" href="https://pricedoctor.io/">
     
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="PriceDoctor: Your Prescription for Smarter Healthcare Costs">
-    <meta property="og:description" content="Find Quality Care, Compare Transparent Prices, and Save Thousands.">
+    <!-- Open Graph -->
+    <meta property="og:title" content="PriceDoctor: Compare Hospital Prices & Save on Healthcare">
+    <meta property="og:description" content="Find quality care at transparent prices. Save thousands on healthcare.">
     <meta property="og:url" content="https://pricedoctor.io">
-    <meta property="og:image" content="https://pricedoctor.io/logo.svg">
     
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="PriceDoctor: Your Prescription for Smarter Healthcare Costs">
-    <meta name="twitter:description" content="Find Quality Care, Compare Transparent Prices, and Save Thousands.">
-    <meta name="twitter:image" content="https://pricedoctor.io/logo.svg">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E51TS36VZN"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-E51TS36VZN');
+    </script>
     
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E51TS36VZN"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-E51TS36VZN');
-</script>
-    
-
-<script type="application/ld-json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "Healthcare Price Transparency",
-  "provider": {
-    "@type": "Organization",
-    "name": "PriceDoctor",
-    "url": "https://pricedoctor.io",
-    "logo": "https://pricedoctor.io/logo.svg",
-    "description": "An authoritative platform providing transparent healthcare pricing and cost-saving strategies.",
-    "sameAs": [
-      "https://x.com/PriceDoctorIo",
-      "https://linkedin.com/company/pricedoctor"
-  },
-  "areaServed": "US",
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "Healthcare Savings Services",
-    "itemListElement": [
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Medical Procedure Price Comparison"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Healthcare Cost Reduction Strategies"
-        }
-      }
-    ]
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://pricedoctor.io"
-  }
-}
-</script>
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #333; }
         
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
+        /* Navigation */
+        .nav-header { background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .logo-link { display: flex; align-items: center; text-decoration: none; }
+        .logo-icon { width: 180px; height: 45px; background: url('/logo.svg') no-repeat center; background-size: contain; }
+        .nav-menu { display: flex; list-style: none; gap: 30px; }
+        .nav-menu a { color: white; text-decoration: none; font-weight: 500; padding: 8px 0; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .nav-menu a:hover, .nav-menu a.active { border-bottom-color: white; }
+        .mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
         
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, rgba(240, 248, 255, 0.95), rgba(230, 240, 250, 0.95)),
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23e6f0fa" width="1200" height="800"/></svg>');
-            background-size: cover;
-            background-position: center;
-            padding: 80px 20px 100px;
-            text-align: center;
-            position: relative;
-        }
+        /* Hero Section with Map */
+        .hero-section { background: linear-gradient(135deg, #f0f8ff 0%, #e6f0fa 100%); padding: 40px 20px 0; }
+        .hero-content { max-width: 1400px; margin: 0 auto; text-align: center; }
+        .hero-content h1 { font-size: 2.5rem; color: #1e5a9e; margin-bottom: 15px; line-height: 1.2; }
+        .hero-content h1 .highlight { color: #2d7ac7; }
+        .hero-content p { font-size: 1.3rem; color: #2d7ac7; margin-bottom: 30px; }
         
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.8) 100%);
-            pointer-events: none;
-        }
+        /* Map Container */
+        .map-container { background: white; border-radius: 12px 12px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); overflow: hidden; }
+        .controls-bar { background: rgba(30, 90, 158, 0.95); padding: 15px 20px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .control-group { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.15); padding: 8px 15px; border-radius: 25px; }
+        .control-group label { font-size: 0.9rem; color: white; }
+        .control-group input, .control-group select { background: white; border: none; padding: 6px 12px; border-radius: 5px; font-size: 0.9rem; }
+        .control-group input { min-width: 180px; }
+        .control-group select { min-width: 150px; cursor: pointer; }
+        .control-group button { background: white; border: none; padding: 6px 20px; border-radius: 5px; cursor: pointer; color: #1e5a9e; font-weight: 600; }
         
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
+        .map-layout { display: flex; height: 600px; position: relative; }
+        .sidebar { width: 380px; background: #f9fafb; border-right: 1px solid #ddd; display: flex; flex-direction: column; overflow: hidden; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid #eee; }
+        .sidebar-header h2 { color: #1e5a9e; font-size: 1.3rem; margin-bottom: 8px; }
+        .location-info { font-size: 0.9rem; color: #666; }
+        .hospital-list { flex: 1; overflow-y: auto; padding: 10px; }
+        .hospital-card { background: white; border: 2px solid #eee; border-radius: 8px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+        .hospital-card:hover { border-color: #2d7ac7; box-shadow: 0 2px 8px rgba(45, 122, 199, 0.2); }
+        .hospital-card.selected { border-color: #2d7ac7; background: #f0f8ff; }
+        .hospital-name { font-weight: 600; color: #1e5a9e; font-size: 1.05rem; margin-bottom: 5px; }
+        .hospital-address { font-size: 0.85rem; color: #666; margin-bottom: 8px; }
+        .hospital-distance { font-size: 0.85rem; color: #999; margin-bottom: 10px; }
+        .hospital-price { display: flex; align-items: center; gap: 10px; }
+        .price-value { font-size: 1.4rem; font-weight: 700; color: #7cb342; }
         
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 40px;
-        }
+        #map { flex: 1; position: relative; }
+        .ad-placement { position: absolute; top: 20px; right: 20px; width: 300px; height: 250px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; border: 2px dashed #ddd; }
+        .ad-placement h3 { color: #1e5a9e; font-size: 1.2rem; margin-bottom: 15px; }
+        .ad-placement p { color: #666; margin-bottom: 20px; }
+        .ad-placement a { color: #2d7ac7; text-decoration: none; font-weight: 600; font-size: 1.1rem; padding: 10px 20px; border: 2px solid #2d7ac7; border-radius: 6px; transition: all 0.2s; }
+        .ad-placement a:hover { background: #2d7ac7; color: white; }
         
-        /*
-        .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+        .loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 3000; background: white; padding: 30px 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #2d7ac7; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .logo-icon::before {
-            content: '✓';
-            color: #7cb342;
-            font-size: 32px;
-            font-weight: bold;
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            background: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid white;
-        }
+        /* Value Props Section */
+        .value-section { max-width: 1200px; margin: 0 auto; padding: 80px 20px; }
+        .value-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 50px; }
+        .value-card { text-align: center; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .value-icon { font-size: 3rem; margin-bottom: 20px; }
+        .value-card h3 { color: #1e5a9e; font-size: 1.4rem; margin-bottom: 15px; }
+        .value-card p { color: #666; line-height: 1.6; }
         
-        .logo-icon::after {
-            content: '+';
-            color: white;
-            font-size: 36px;
-            font-weight: 300;
-        }*/
-
-       
-        .logo-icon {
-            width: 400px;
-            height: 100px;
-            background: url('/logo.svg') no-repeat center center;
-            background-size: contain;
-            border-radius: 12px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        } 
-
+        /* Price Comparison Table */
+        .comparison-section { background: #f9fafb; padding: 80px 20px; }
+        .comparison-content { max-width: 1000px; margin: 0 auto; }
+        .comparison-content h2 { text-align: center; color: #1e5a9e; font-size: 2rem; margin-bottom: 40px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        thead { background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); color: white; }
+        th { padding: 15px; text-align: left; font-weight: 600; }
+        td { padding: 15px; border-bottom: 1px solid #e6f0fa; }
+        tbody tr:hover { background: #f0f8ff; }
         
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 300;
-            color: #1e5a9e;
-        }
+        /* Tips Section */
+        .tips-section { max-width: 1000px; margin: 0 auto; padding: 80px 20px; }
+        .tips-section h2 { text-align: center; color: #1e5a9e; font-size: 2rem; margin-bottom: 50px; }
+        .tip-card { background: white; border-left: 5px solid #2d7ac7; padding: 30px; margin-bottom: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .tip-card h3 { color: #1e5a9e; font-size: 1.4rem; margin-bottom: 15px; }
+        .tip-card p { color: #666; line-height: 1.7; }
+        .learn-more { display: inline-block; margin-top: 15px; color: #2d7ac7; text-decoration: none; font-weight: 600; }
+        .learn-more:hover { text-decoration: underline; }
         
-        .logo-text strong {
-            font-weight: 700;
-            color: #2d7ac7;
-        }
-        
-        .tagline {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: -5px;
-        }
-        
-        h1 {
-            font-size: 3rem;
-            color: #1e5a9e;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-        
-        h1 .highlight {
-            color: #2d7ac7;
-        }
-        
-        .hero p {
-            font-size: 1.3rem;
-            color: #2d7ac7;
-            margin-bottom: 40px;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            padding: 18px 50px;
-            background: linear-gradient(135deg, #7cb342 0%, #8bc34a 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(124, 179, 66, 0.4);
-            transition: all 0.3s ease;
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(124, 179, 66, 0.5);
-            background: linear-gradient(135deg, #8bc34a 0%, #9ccc65 100%);
-        }
-        
-        /* Main Content Area */
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 60px 20px;
-            background: white;
-        }
-        
-        /* Article Section */
-        .article-section {
-            background: #f9fafb;
-            padding: 60px 0;
-        }
-        
-        header.article-header {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
-            border-left: 5px solid #2d7ac7;
-        }
-        
-        header.article-header h2 {
-            font-size: 2.2rem;
-            margin-bottom: 15px;
-            color: #1e5a9e;
-        }
-        
-        .meta {
-            color: #666;
-            font-size: 0.95rem;
-        }
-        
-        article {
-            background: white;
-            padding: 50px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        
-        article h2 {
-            margin-top: 40px;
-            margin-bottom: 20px;
-            color: #1e5a9e;
-            font-size: 1.8rem;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e6f0fa;
-        }
-        
-        article h3 {
-            margin-top: 25px;
-            margin-bottom: 15px;
-            color: #2d7ac7;
-            font-size: 1.3rem;
-        }
-        
-        article p {
-            margin-bottom: 20px;
-            font-size: 1.05rem;
-            color: #444;
-        }
-        
-        article a {
-            color: #2d7ac7;
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.2s;
-        }
-        
-        article a:hover {
-            border-bottom-color: #2d7ac7;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        thead {
-            background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%);
-            color: white;
-        }
-        
-        th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #e6f0fa;
-        }
-        
-        tbody tr:hover {
-            background: #f0f8ff;
-        }
-        
-        .tldr {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
-            padding: 25px;
-            border-left: 5px solid #2d7ac7;
-            margin-bottom: 35px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(45, 122, 199, 0.1);
-        }
-        
-        .tldr strong {
-            color: #1e5a9e;
-            font-size: 1.1rem;
-        }
+        /* Interest Gauge */
+        .interest-section { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 50px 30px; border-radius: 12px; margin: 50px 0; border-left: 5px solid #ff9800; }
+        .interest-section h3 { color: #e65100; font-size: 1.4rem; margin-bottom: 15px; }
+        .interest-buttons { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+        .interest-buttons button { flex: 1; max-width: 250px; padding: 15px 30px; border: none; border-radius: 8px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-yes { background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%); color: white; }
+        .btn-no { background: linear-gradient(135deg, #ef5350 0%, #e57373 100%); color: white; }
         
         /* CTA Section */
-        .bottom-cta {
-            background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%);
-            color: white;
-            padding: 60px 40px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 60px;
-            box-shadow: 0 4px 20px rgba(30, 90, 158, 0.3);
-        }
+        .cta-section { background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); color: white; padding: 80px 20px; text-align: center; }
+        .cta-section h2 { font-size: 2.2rem; margin-bottom: 20px; }
+        .cta-section p { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.95; }
+        .cta-button { display: inline-block; padding: 18px 50px; background: linear-gradient(135deg, #7cb342 0%, #8bc34a 100%); color: white; text-decoration: none; border-radius: 50px; font-size: 1.2rem; font-weight: 600; box-shadow: 0 4px 15px rgba(124, 179, 66, 0.4); transition: all 0.3s; }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124, 179, 66, 0.5); }
         
-        .bottom-cta h2 {
-            font-size: 2.2rem;
-            margin-bottom: 15px;
-            color: white;
-        }
-        
-        .bottom-cta p {
-            font-size: 1.2rem;
-            margin-bottom: 35px;
-            opacity: 0.95;
-        }
-        
-        .cta-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .form-group {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        input {
-            flex: 1;
-            min-width: 220px;
-            padding: 16px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        
-        button {
-            padding: 16px 45px;
-            background: linear-gradient(135deg, #7cb342 0%, #8bc34a 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 10px rgba(124, 179, 66, 0.3);
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(124, 179, 66, 0.4);
-        }
-        
-        .success-message {
-            display: none;
-            background: #7cb342;
-            color: white;
-            padding: 18px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-size: 1.05rem;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.2rem;
-            }
+        /* Mobile Responsive */
+        @media (max-width: 968px) {
+            .nav-container { height: 60px; padding: 0 15px; }
+            .logo-icon { width: 140px; height: 35px; }
+            .mobile-toggle { display: block; }
+            .nav-menu { position: fixed; top: 60px; left: 0; right: 0; background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); flex-direction: column; padding: 20px; gap: 0; transform: translateY(-100%); transition: transform 0.3s; }
+            .nav-menu.open { transform: translateY(0); }
+            .nav-menu li { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .nav-menu a { display: block; padding: 15px 0; border: none !important; }
             
-            .hero p {
-                font-size: 1.1rem;
-            }
+            .hero-content h1 { font-size: 1.8rem; }
+            .hero-content p { font-size: 1.1rem; }
             
-            article {
-                padding: 30px 25px;
-            }
+            .controls-bar { flex-direction: column; gap: 10px; padding: 12px; }
+            .control-group { width: 100%; justify-content: space-between; }
+            .control-group input, .control-group select { min-width: 0; flex: 1; }
             
-            .form-group {
-                flex-direction: column;
-            }
+            .map-layout { flex-direction: column; height: auto; }
+            .sidebar { width: 100%; height: 400px; border-right: none; border-bottom: 1px solid #ddd; }
+            #map { height: 400px; }
+            .ad-placement { position: static; width: calc(100% - 40px); margin: 10px 20px; height: auto; min-height: 150px; }
             
-            input, button {
-                width: 100%;
-            }
-            
-            table {
-                font-size: 0.9rem;
-            }
-            
-            th, td {
-                padding: 10px;
-            }
+            .value-grid { grid-template-columns: 1fr; gap: 30px; }
+            .tip-card { padding: 20px; }
         }
+        
+        .hospital-marker { background: white; border: 3px solid #2d7ac7; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #2d7ac7; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer; }
+        .hospital-marker:hover { transform: scale(1.1); }
+        .hospital-marker.selected { background: #2d7ac7; color: white; transform: scale(1.15); }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
-    <div class="hero">
+    <nav class="nav-header">
+        <div class="nav-container">
+            <a href="/" class="logo-link"><div class="logo-icon"></div></a>
+            <button class="mobile-toggle" id="mobileToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/resources.html">Resources</a></li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero with Map -->
+    <section class="hero-section">
         <div class="hero-content">
-            <div class="logo">
-                <div class="logo-icon"></div>
-            </div>
-            <h1><span class="highlight">PriceDoctor:</span> Your Prescription for<br>Rising Healthcare Costs</h1>
-            <p>Find Quality Care, Compare Transparent Prices, and Save Thousands.</p>
-            <a href="#article" class="cta-button">Learn How to Save Now</a>
+            <h1><span class="highlight">Compare Hospital Prices</span><br>Save Thousands on Healthcare</h1>
+            <p>Find quality care at transparent prices in your area</p>
         </div>
-    </div>
-
-    <!-- Article Section -->
-    <div class="article-section" id="article">
-        <div class="container">
-            <header class="article-header">
-                <h2>Eight Ways to Save Money on Healthcare</h2>
-                <div class="meta">
-                    Staff Writer - PriceDoctor Team | Published December 17, 2024 | 8 min read
-                </div>
-            </header>
-            
-            <article>
-                <!-- TL;DR for AI engines -->
-                <div class="tldr">
-                    <strong>Quick Answer:</strong> Save money on healthcare by choosing lower-cost care options, shopping for transparent pricing using CPT codes, using in-network providers, maximizing your HSA's triple tax benefits, and negotiating bills. With proper planning, you can save hundreds to thousands annually.
-                </div>
-                
-                <p>With healthcare costs expected to rise, here are eight ways to save on healthcare costs:</p>
-                
-                <h2>1. Make A Plan Now - Don't Wait</h2>
-                
-                <p>Emergency rooms and illness are the worst places to make life-altering decisions. When a crisis hits, clear judgment disappears. Don't wait until you're overwhelmed to figure out your care—take control now. Use the steps below to build your plan while you have the clarity to do it right.</p>
-                
-                <h2>2. Choose the Best Option for Care You Need</h2>
-                
-                <p>Decide ahead of time exactly where you will go and under what circumstances for each level of care. This <a href="https://www.uhc.com/member-resources/where-to-go-for-medical-care/care-options-and-costs" target="_blank">website from United Healthcare</a> does a great job of breaking down care options. The chart below shows the differences in the cost of care for each type of visit. Selecting the right option for the level of care you need can save hundreds to thousands of dollars per visit.</p>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Type of Care</th>
-                            <th>National Average</th>
-                            <th>Range</th>
-                            <th>Source</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Virtual Visit</td>
-                            <td>$65</td>
-                            <td>$40 - $90</td>
-                            <td><a href="https://recurohealth.com/30-key-metrics-when-evaluating-virtual-care-savings-for-2026/" target="_blank">Recuro</a></td>
-                        </tr>
-                        <tr>
-                            <td>Primary Care Visit</td>
-                            <td>$171</td>
-                            <td>$150 - $300</td>
-                            <td><a href="https://www.talktomira.com/post/how-much-does-primary-care-cost-without-insurance" target="_blank">Mira</a></td>
-                        </tr>
-                        <tr>
-                            <td>Urgent Care Visit</td>
-                            <td>$280</td>
-                            <td>$160 - $300</td>
-                            <td><a href="https://www.forbes.com/advisor/health-insurance/urgent-care-cost/" target="_blank">Forbes</a></td>
-                        </tr>
-                        <tr>
-                            <td>Emergency Care</td>
-                            <td>$2,750</td>
-                            <td>$1,200 - $4,500</td>
-                            <td><a href="https://latestcost.com/emergency-room-average-cost/" target="_blank">LatestCost</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                
-                
-                
-                
-                <h2>3. Shop for the Best Prices with High Quality</h2>
-                
-                <p>You wouldn't buy a car without knowing the price and checking the quality of your purchase — why should the care you receive be any different? Higher prices do not alway equal higher quality.</p>
-                
-                <h3>How to Check Prices?</h3>
-                
-                <p>Healthcare providers are required to provide a transparent list of the cost for services. You can locate these by going to the provider's website and searching for transparency or for links to pricing under the billing department.</p>
-                
-                <h3>How Can I Compare Across Providers?</h3>
-                
-                <p>Many health insurance plans provide tools to help you compare costs and quality. Check with your insurance provider's site to see if they provide assistance. Medicare provides a tool that may also be helpful for comparison: <a href="https://www.medicare.gov/care-compare/" target="_blank">Find Healthcare Providers: Compare Care Near You | Medicare</a></p>
-                
-                <h3>Can I Compare Costs Myself?</h3>
-                
-                <p>Yes, it can get a little complicated but there is a way to make it easier. Pricing tables from healthcare providers use Common Procedure Codes or CPT Codes. Sometimes there can be multiple codes for different services received during a single visit. Rather than spending time trying to determine the exact cost of the visit, pick a single common CPT code and compare across providers. While this will not give an exact cost, it shows how the provider is positioned either higher or lower in cost. Here are some common CPT codes you can use for comparison. </p>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Type of Care</th>
-                            <th>CPT Code</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>New Patient</td>
-                            <td>99202-99205</td>
-                        </tr>
-                        <tr>
-                            <td>Existing Patient</td>
-                            <td>99211-99215</td>
-                        </tr>
-                        <tr>
-                            <td>New Patient Urgent Care</td>
-                            <td>99202-99205</td>
-                        </tr>
-                        <tr>
-                            <td>Emergency Care</td>
-                            <td>99281-99283</td>
-                        </tr>
-                        <tr>
-                            <td>Basic Blood Draw</td>
-                            <td>36415</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <p>Virtual visits and Urgent Care Facilities are much better about posting their prices directly on their website. They may use the same codes as a primary care visit or sometimes use codes for emergency care by the level of care and length of the visit.  The prices listed will be for a specific insurance or self-pay, depending on your specifics, compare using the insurance you have or look at the self-pay price.</p>
-                
-                <h3>How to Check for Quality?</h3>
-                
-                <p>Check your insurance provider to see if they provide quality metrics and reviews, many do. Another great resource is <a href="https://www.healthgrades.com/" target="_blank">HealthGrades.com</a>.</p>
-
-                <!-- Interest Gauge Section -->
-<div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 30px; border-radius: 12px; margin: 30px 0; border-left: 5px solid #ff9800; box-shadow: 0 2px 10px rgba(255, 152, 0, 0.15);">
-    <h3 style="color: #e65100; margin-top: 0; font-size: 1.4rem;">💡 We're Building Something Better</h3>
-    <p style="font-size: 1.1rem; margin-bottom: 20px;"><strong>What if comparing healthcare prices was as easy as entering your zip code?</strong></p>
-    <p style="margin-bottom: 25px;">We're considering building a simple tool that lets you instantly compare procedure costs across providers in your area. No more hunting through confusing price lists—just enter your zip code and see transparent pricing.</p>
-    
-    <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        <p style="font-weight: 600; color: #e65100; margin-bottom: 15px; font-size: 1.05rem;">Would you use this tool?</p>
-        <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
-            <button onclick="recordInterest('yes')" style="flex: 1; min-width: 220px; max-width: 300px; padding: 18px 40px; background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(102, 187, 106, 0.3);">
-                👍 Yes, I'd Use This!
-            </button>
-            <button onclick="recordInterest('no')" style="flex: 1; min-width: 220px; max-width: 300px; padding: 18px 40px; background: linear-gradient(135deg, #ef5350 0%, #e57373 100%); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(239, 83, 80, 0.3);">
-                👎 Not Interested
-            </button>
-        </div>
-        <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 15px; background: #e8f5e9; color: #2e7d32; border-radius: 6px; font-weight: 500; text-align: center;">
-            ✓ Thanks for your feedback!
-        </div>
-        <div id="optionalFeedback" style="display: none; margin-top: 20px;">
-            <p id="feedbackPrompt" style="font-weight: 600; margin-bottom: 15px; color: #555; font-size: 1.05rem;"></p>
-            
-            <!-- Zip Code Input -->
-            <div style="margin-bottom: 15px;">
-                <label for="zipCode" style="display: block; font-weight: 500; color: #666; margin-bottom: 8px; font-size: 0.95rem;">
-                    📍 Your Zip Code <span style="color: #999; font-weight: 400;">(optional, but helps us prioritize areas)</span>
-                </label>
-                <input 
-                    type="text" 
-                    id="zipCode" 
-                    placeholder="e.g., 71201" 
-                    maxlength="5"
-                    pattern="[0-9]{5}"
-                    style="width: 150px; padding: 10px 15px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 1rem; font-family: inherit;"
-                />
-            </div>
-            
-            <!-- Feedback Textarea -->
-            <div style="margin-bottom: 15px;">
-                <label for="feedbackText" style="display: block; font-weight: 500; color: #666; margin-bottom: 8px; font-size: 0.95rem;">
-                    💬 Your Thoughts <span style="color: #999; font-weight: 400;">(optional)</span>
-                </label>
-                <textarea 
-                    id="feedbackText" 
-                    placeholder="" 
-                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 0.95rem; min-height: 100px; font-family: inherit; resize: vertical;"
-                ></textarea>
-            </div>
-            
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button onclick="submitDetailedFeedback()" style="padding: 12px 30px; background: #2d7ac7; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem;">
-                    Submit Feedback
-                </button>
-                <button onclick="skipFeedback()" style="padding: 12px 30px; background: #90a4ae; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem;">
-                    Skip
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-                
-                <h2>4. Choose In-Network Providers / Check for a Self-Pay Discounts</h2>
-
-                <h3>If You Have Insurance</h3>
-                
-                <p>Check that all of the physicians you will see are covered by your insurance provider and any labs or diagnostic imaging are in network as well. Be sure to check and re-check before visits because eligibility for coverages do change over time and can leave you with a hefty bill.
-
-                <h3>If You are Self Insuranced or Under-Insured</h3>
-                
-                <p>If you don't have insurance or are underinsured, check with the billing office to see if they provide a self-pay discount. Often times this is also listed on the billing pages for the provider.</p>
-                
-                <h2>5. Understand Your Insurance Plan</h2>
-                
-                <p>There are a variety of plan options out there. Be sure to check your insurance plan carefully for the amount you are responsible to pay. Some basics to be aware of:</p>
-                
-                <p><strong>Co-Pay</strong> — an amount you are responsible to pay for each visit (e.g. $25 co-pay)</p>
-                
-                <p><strong>Patient Liability/% Share</strong> — some plans pay only up to a certain amount per visit or require you to pay a percentage or both</p>
-                
-                <p><strong>Deductible</strong> — often this is an amount per individual or per family on an annual basis that you must pay before insurance will pay their part.</p>
-                
-                <p>One area of significant savings is in the type of plan you choose, content for another article, significant savings can be found by shopping for an insurance provider and plan that meets you're specific health needs.</p>
-                
-                <h2>6. Use Your Health Savings Account (HSA)</h2>
-                
-                <p>If you are among the many americans with a High Deductible Plan and an HSA, take advantage of the triple tax savings by paying for all of your out-of-pocket medical expenses using your HSA.</p>
-                
-                <h2>7. Review Your Bill and Negotiate</h2>
-                
-                <p>Billing practices vary based on the provider and they are not always accurate. Here's what you can do:</p>
-                
-                <ol style="margin-left: 20px; margin-bottom: 20px;">
-                    <li style="margin-bottom: 10px;"><strong>Be Patient.</strong> Billing can take some time.</li>
-                    <li style="margin-bottom: 10px;"><strong>Wait to Pay.</strong> Wait until insurance is processed.</li>
-                    <li style="margin-bottom: 10px;"><strong>Review your bill.</strong> Carefully review it for accuracy.</li>
-                    <li style="margin-bottom: 10px;"><strong>Contact Insurance First.</strong> Contact your insurance first and seek to understand. Often times insurers will work on your behalf to resolve billing problems - ask them to help.</li>
-                    <li style="margin-bottom: 10px;"><strong>Contact the Billing Office.</strong> Be nice. Ask for an explanation and compare to what your insurance payer stated.</li>
-                    <li style="margin-bottom: 10px;"><strong>Negotiate.</strong> — if the price charged is different than the price submitted, ask why and if the price listed on their website can be used? Ask what the self-pay price would be — sometimes the price of self-pay would be less than you pay with insurance. Ask if there is a financial plan where you can pay part over time.</li>
-                </ol>
-                
-                <h2>8. Improve Your Health</h2>
-                
-                <p>Ultimately poor health practices affect how you feel and impact your long term cost of care. Here are some common areas to improve your health:</p>
-                
-                <ol style="margin-left: 20px; margin-bottom: 20px;">
-                    <li style="margin-bottom: 10px;"><strong>Nutrition.</strong> Replace your processed foods with raw and non-processed foods.</li>
-                    <li style="margin-bottom: 10px;"><strong>Weight.</strong> Obesity is a huge factor in health. Seek help reducing your weight through exercise and nutrition.</li>
-                    <li style="margin-bottom: 10px;"><strong>Stop or reduce smoking.</strong> Smoking and vaping have a long term impact on your health</li>
-                    <li style="margin-bottom: 10px;"><strong>Schedule Preventative Visits.</strong> Many preventative checks are free, be sure to have your health checked regularly.</li>
-                </ol>
-                
-                <!-- FAQ Section -->
-                <h2>Frequently Asked Questions</h2>
-                
-                <div style="margin-bottom: 20px;">
-                    <h3>How much can I save by choosing virtual visits?</h3>
-                    <p>Virtual visits average $65 compared to $171 for primary care and $280 for urgent care. That's hundreds of dollars in savings. </p>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <h3>What is a Health Savings Account (HSA)?</h3>
-                    <p>An HSA is a tax-advantaged account that lets you pay for qualified medical expenses. It offers triple tax savings: contributions are tax-deductible, growth is tax-free, and withdrawals for medical expenses are tax-free.</p>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <h3>How do I find healthcare price transparency information?</h3>
-                    <p>Healthcare providers are required to provide transparent pricing. Visit the provider's website and search for "transparency" or check the billing department section for links to pricing tables.</p>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <h3>Should I negotiate my medical bills?</h3>
-                    <p>Yes. Review your bill carefully, contact your insurance first to understand charges, then contact the provider's billing office. Ask about the self-pay price, payment plans, and whether listed prices can apply if different charges were made.</p>
-                </div>
-            </article>
-            
-            <!-- Call to Action 
-            <div class="bottom-cta">
-                <h2>Ready to Take Control of Your Healthcare Costs?</h2>
-                <p>Join our community to get early access to PriceDoctor's price comparison tool and exclusive healthcare savings tips.</p>
-                
-                <form class="cta-form" id="ctaForm">
-                    <div class="form-group">
-                        <input type="text" name="name" placeholder="Your Name (optional)" id="nameInput">
-                        <input type="email" name="email" placeholder="Your Email" required id="emailInput">
-                        <button type="submit">Get Early Access</button>
-                    </div>
-                    <div class="success-message" id="successMessage">
-                        ✓ Thanks! We'll keep you updated on our progress.
-                    </div>
-                </form>
-            </div>-->
-        </div>
-    </div>
-    
-    <script>
         
-        // Smooth scroll for CTA button
-        document.querySelector('.cta-button').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.querySelector('#article').scrollIntoView({ 
-                behavior: 'smooth' 
-            });
-        });
-
- // Interest gauge functionality
-let userInterest = null;
-
-async function recordInterest(response) {
-    userInterest = response;
+        <div class="map-container">
+            <div class="controls-bar">
+                <div class="control-group">
+                    <label>📍</label>
+                    <input type="text" id="addressInput" placeholder="Enter address or zip">
+                    <button onclick="searchAddress()">Search</button>
+                </div>
+                <div class="control-group">
+                    <label>Procedure:</label>
+                    <select id="procedureSelect"><option value="">All Procedures</option></select>
+                </div>
+                <div class="control-group">
+                    <label>Range:</label>
+                    <select id="radiusSelect">
+                        <option value="10">10 miles</option>
+                        <option value="25" selected>25 miles</option>
+                        <option value="50">50 miles</option>
+                        <option value="100">100 miles</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="map-layout">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h2>Nearby Hospitals</h2>
+                        <div class="location-info" id="locationInfo">📍 Locating you...</div>
+                    </div>
+                    <div class="hospital-list" id="hospitalList"></div>
+                </div>
+                
+                <div id="map">
+                    <div class="ad-placement">
+                        <h3>Advertise Here</h3>
+                        <p>Reach healthcare consumers at decision time</p>
+                        <a href="tel:+1234567890">📞 Call for Rates</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     
-    // Visual feedback
-    const buttons = document.querySelectorAll('[onclick^="recordInterest"]');
-    buttons.forEach(btn => {
-        btn.style.opacity = '0.5';
-        btn.disabled = true;
+    <!-- Value Props -->
+    <section class="value-section">
+        <div class="value-grid">
+            <div class="value-card">
+                <div class="value-icon">💰</div>
+                <h3>Save Thousands</h3>
+                <p>Same procedure can vary by $10,000+ between providers. Compare prices before you commit.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">🔍</div>
+                <h3>Transparent Pricing</h3>
+                <p>See real prices from hospitals in your area. No surprises, no hidden fees.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">⭐</div>
+                <h3>Quality Care</h3>
+                <p>Higher price doesn't mean better care. Find the best value for your health.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Price Comparison -->
+    <section class="comparison-section">
+        <div class="comparison-content">
+            <h2>Know Your Options: Care Costs by Type</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type of Care</th>
+                        <th>National Average</th>
+                        <th>Best For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Virtual Visit</strong></td>
+                        <td>$65</td>
+                        <td>Minor illnesses, follow-ups, prescriptions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Care</strong></td>
+                        <td>$171</td>
+                        <td>Routine check-ups, non-urgent issues</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Urgent Care</strong></td>
+                        <td>$280</td>
+                        <td>Sprains, minor cuts, flu symptoms</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Emergency Room</strong></td>
+                        <td>$2,750</td>
+                        <td>Life-threatening conditions only</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    
+    <!-- Tips Section -->
+    <section class="tips-section">
+        <h2>Smart Strategies to Reduce Healthcare Costs</h2>
+        
+        <div class="tip-card">
+            <h3>1. Choose the Right Care Level</h3>
+            <p>An emergency room visit costs 10x more than urgent care. Unless it's life-threatening, consider lower-cost options like virtual visits ($65) or urgent care ($280) instead of the ER ($2,750).</p>
+        </div>
+        
+        <div class="tip-card">
+            <h3>2. Shop Around Using CPT Codes</h3>
+            <p>Healthcare providers must publish transparent pricing. Use Common Procedure Codes (CPT codes) to compare prices across facilities. A routine visit (CPT 99213) can vary by hundreds of dollars.</p>
+        </div>
+        
+        <div class="tip-card">
+            <h3>3. Stay In-Network</h3>
+            <p>Out-of-network care can cost 3-5x more. Always verify providers are in your insurance network before scheduling, and double-check labs and imaging facilities too.</p>
+        </div>
+        
+        <div class="tip-card">
+            <h3>4. Maximize Your HSA</h3>
+            <p>Health Savings Accounts offer triple tax benefits: tax-deductible contributions, tax-free growth, and tax-free withdrawals for medical expenses. It's one of the best savings vehicles available.</p>
+        </div>
+        
+        <div class="tip-card">
+            <h3>5. Always Review and Negotiate Bills</h3>
+            <p>Medical billing errors are common. Wait for insurance processing, review carefully, and don't hesitate to negotiate. Ask about self-pay discounts or payment plans.</p>
+        </div>
+        
+        <a href="/resources.html" class="cta-button" style="display: block; text-align: center; margin-top: 50px;">Read Full Guide with 8 Money-Saving Strategies →</a>
+        
+        <!-- Interest Gauge -->
+        <div class="interest-section">
+            <h3>💡 Help Us Build Better Tools</h3>
+            <p style="margin-bottom: 10px;"><strong>Would you use a tool that instantly compares prices across all providers in your zip code?</strong></p>
+            <p style="color: #666; margin-bottom: 20px;">No more hunting through confusing price lists—just enter your zip and see transparent pricing.</p>
+            <div class="interest-buttons">
+                <button class="btn-yes" onclick="recordInterest('yes')">👍 Yes, I'd Use This!</button>
+                <button class="btn-no" onclick="recordInterest('no')">👎 Not Interested</button>
+            </div>
+            <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 15px; background: #e8f5e9; color: #2e7d32; border-radius: 6px; font-weight: 500; text-align: center;">
+                ✓ Thanks for your feedback!
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>Take Control of Your Healthcare Costs</h2>
+        <p>Start comparing prices and saving money today</p>
+        <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="cta-button">Compare Prices Now</a>
+    </section>
+    
+    <div class="loading" id="loading"><div class="spinner"></div><p>Finding hospitals near you...</p></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+    const mt=document.getElementById('mobileToggle'),nm=document.getElementById('navMenu');
+    mt.addEventListener('click',()=>{nm.classList.toggle('open');mt.textContent=nm.classList.contains('open')?'✕':'☰';});
+    nm.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{nm.classList.remove('open');mt.textContent='☰';}));
+    
+    let map,userLocation=null,currentRadius=25,currentProcedure='',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
+    
+    window.addEventListener('DOMContentLoaded',()=>{
+        initMap();loadProcedures();getUserLocation();
+        document.getElementById('addressInput').addEventListener('keypress',e=>{if(e.key==='Enter')searchAddress();});
     });
     
-    // Show thank you message
-    document.getElementById('feedbackMessage').style.display = 'block';
+    function initMap(){map=L.map('map').setView([39.8283,-98.5795],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);}
     
-    // Customize prompt and placeholder based on response
-    const promptText = document.getElementById('feedbackPrompt');
-    const textArea = document.getElementById('feedbackText');
+    async function loadProcedures(){try{const r=await fetch('/api/procedures'),d=await r.json(),s=document.getElementById('procedureSelect');d.procedures.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});}catch(e){console.error(e);}}
     
-    if (response === 'yes') {
-        promptText.textContent = '🎉 Awesome! Help us build the right tool for you:';
-        textArea.placeholder = 'E.g., Which procedures would you want to compare? What information is most important? Any specific features you\'d love to see?';
-    } else {
-        promptText.textContent = '💭 We understand. Can you help us understand why?';
-        textArea.placeholder = 'E.g., I prefer to call providers directly, I don\'t trust online pricing, I rarely need medical care, etc.';
-    }
+    function getUserLocation(){if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>{userLocation={lat:p.coords.latitude,lng:p.coords.longitude};map.setView([userLocation.lat,userLocation.lng],11);addUserMarker();updateRadiusCircle();updateLocationInfo();fetchEntities();},e=>{console.error(e);alert('Unable to get location. Enter address.');document.getElementById('loading').style.display='none';});}else{document.getElementById('loading').style.display='none';}}
     
-    // Show feedback box after a brief delay
-    setTimeout(() => {
-        document.getElementById('optionalFeedback').style.display = 'block';
-    }, 500);
+    function addUserMarker(){if(userMarker)map.removeLayer(userMarker);userMarker=L.marker([userLocation.lat,userLocation.lng],{icon:L.divIcon({className:'user-marker',html:'<div style="background:#7cb342;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-size:1.2rem;">📍</div>',iconSize:[30,30]})}).addTo(map);}
     
-    // Send initial response to server
-    try {
-        await fetch('/api/feedback', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-                interest: response,
-                timestamp: new Date().toISOString()
-            })
-        });
-    } catch (error) {
-        console.error('Feedback error:', error);
-    }
-}
-
-async function submitDetailedFeedback() {
-    const feedbackText = document.getElementById('feedbackText').value;
-    const zipCode = document.getElementById('zipCode').value;
+    async function searchAddress(){const a=document.getElementById('addressInput').value.trim();if(!a){alert('Enter address');return;}document.getElementById('loading').style.display='block';try{const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(a)}&countrycodes=us&limit=1`),d=await r.json();if(d&&d.length>0){const res=d[0];userLocation={lat:parseFloat(res.lat),lng:parseFloat(res.lon)};map.setView([userLocation.lat,userLocation.lng],11);addUserMarker();updateRadiusCircle();updateLocationInfo();await fetchEntities();}else{document.getElementById('loading').style.display='none';alert('Address not found.');}}catch(e){console.error(e);document.getElementById('loading').style.display='none';}}
     
-    // Validate zip code if provided
-    if (zipCode && !/^\d{5}$/.test(zipCode)) {
-        alert('Please enter a valid 5-digit zip code, or leave it blank.');
-        return;
-    }
+    function updateRadiusCircle(){if(radiusCircle)map.removeLayer(radiusCircle);if(userLocation)radiusCircle=L.circle([userLocation.lat,userLocation.lng],{color:'#2d7ac7',fillColor:'#2d7ac7',fillOpacity:0.1,radius:currentRadius*1609.34}).addTo(map);}
     
-    // At least one field should have content
-    if (!feedbackText.trim() && !zipCode.trim()) {
-        alert('Please provide your zip code or feedback, or click Skip.');
-        return;
-    }
+    async function updateLocationInfo(){try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLocation.lat}&lon=${userLocation.lng}`),d=await r.json(),c=d.address.city||d.address.town||d.address.county||'Your Location';document.getElementById('locationInfo').textContent=`📍 ${c}, within ${currentRadius} miles`;}catch{document.getElementById('locationInfo').textContent=`📍 Within ${currentRadius} miles`;}}
     
-    try {
-        await fetch('/api/feedback', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-                interest: userInterest,
-                detailedFeedback: feedbackText,
-                zipCode: zipCode || null,
-                timestamp: new Date().toISOString()
-            })
-        });
-        
-        document.getElementById('feedbackText').value = '';
-        document.getElementById('zipCode').value = '';
-        document.getElementById('feedbackMessage').innerHTML = '✓ Thanks for the detailed feedback! This really helps us build something useful.';
-        document.getElementById('optionalFeedback').style.display = 'none';
-        
-    } catch (error) {
-        console.error('Detailed feedback error:', error);
-        alert('Something went wrong. Please try again.');
-    }
-}
-
-function skipFeedback() {
-    document.getElementById('optionalFeedback').style.display = 'none';
-    document.getElementById('feedbackMessage').innerHTML = '✓ Thanks for your feedback!';
-}
-    </script>
-</body>
-</html>
+    async function fetchEntities(){try{const r=await fetch('/api/entities',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lat:userLocation.lat,lng:userLocation.lng,radius:currentRadius,procedureType:currentProcedure})}),d=await r.json();entities=d.entities||[];document.getElementById('loading').style.display='none';renderEntities();}catch(e){console.error(e);document.getElementById('loading').style.display='none';}}
+    
+    function renderEntities(){markers.forEach(m=>map.removeLayer(m));markers=[];const el=document.getElementById('hospitalList');el.innerHTML='';if(entities.length===0){el.innerHTML='<div style="padding:20px;text-align:center;color:#999;">No entities found. Try increasing radius.</div>';return;}entities.forEach(e=>{const m=L.marker([e.lat,e.lng],{icon:L.divIcon({className:'hospital-marker-wrapper',html:`<div class="hospital-marker" data-id="${e.id}">${e.price}</div>`,iconSize:[40,40]})}).addTo(map);m.on('click',()=>selectEntity(e.id));markers.push(m);const c=document.createElement('div');c.className='hospital-card';c.dataset.id=e.id;c.onclick=()=>selectEntity(e.id);c.innerHTML=`<div class="hospital-name">${e.name}</div><div class="hospital-address">${e.address}</div><div class="hospital-distance">📍 ${e.distance.toFixed(1)} miles away</div><div class="hospital-price"><span class="price-value">${e.price}</span></div>`;el.appendChild(c);});}
+    
+    function selectEntity(id){selectedEntity=entities.find(h=>h.id===id);if(!selectedEntity)return;document.querySelectorAll('.hospital-card').forEach(c=>c.classList.toggle('selected',c.dataset.id==id));document.querySelectorAll('.hospital-marker').forEach(m=>m.classList.toggle('selected',m.dataset.id==id));map.setView([selectedEntity.lat,selectedEntity.lng],13);}
+    
+    document.getElementById('radiusSelect').addEventListener('change',e=>{currentRadius=parseInt(e.target.value);updateRadiusCircle();updateLocationInfo();if(userLocation){document.getElementById('loading').style.display='block';fetchEntities();}});
+    
+    document.getElementById('procedureSelect').addEventListener('change',e=>{currentProcedure=e.target.value;if(userLocation){document.getElementById('loading').style.display='block';fetchEntities();}});
+    
+    async function recordInterest(response){document.querySelectorAll('.interest-buttons button').forEach(b=>{b.disabled=true;b.style.opacity='0.5';});document.getElementById('feedbackMessage').style.display='block';try{await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({interest:response,timestamp:new Date().toISOString()})});}catch(e){console.error(e);}}
