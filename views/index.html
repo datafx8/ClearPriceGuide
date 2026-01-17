@@ -29,13 +29,25 @@
         
         /* Navigation */
         .nav-header { background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
-        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 70px; gap: 20px; }
         .logo-link { display: flex; align-items: center; text-decoration: none; }
         .logo-icon { width: 180px; height: 45px; background: url('/logo.svg') no-repeat center; background-size: contain; }
+        .tagline { color: white; font-size: 1.1rem; font-weight: 500; white-space: nowrap; }
         .nav-menu { display: flex; list-style: none; gap: 30px; }
         .nav-menu a { color: white; text-decoration: none; font-weight: 500; padding: 8px 0; border-bottom: 2px solid transparent; transition: all 0.2s; }
         .nav-menu a:hover, .nav-menu a.active { border-bottom-color: white; }
         .mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+        
+        .map-section { background: white; }
+        .disclaimer { background: #fff9e6; border-left: 4px solid #ff9800; padding: 15px 20px; margin: 0; text-align: center; color: #666; font-size: 0.95rem; }
+        .disclaimer strong { color: #e65100; }
+        
+        /* Hero Section with Map */
+        .hero-section { background: linear-gradient(135deg, #f0f8ff 0%, #e6f0fa 100%); padding: 40px 20px 0; }
+        .hero-content { max-width: 1400px; margin: 0 auto; text-align: center; }
+        .hero-content h1 { font-size: 2.5rem; color: #1e5a9e; margin-bottom: 15px; line-height: 1.2; }
+        .hero-content h1 .highlight { color: #2d7ac7; }
+        .hero-content p { font-size: 1.3rem; color: #2d7ac7; margin-bottom: 30px; }
         
         /* Hero Section with Map */
         .hero-section { background: linear-gradient(135deg, #f0f8ff 0%, #e6f0fa 100%); padding: 40px 20px 0; }
@@ -126,6 +138,7 @@
         @media (max-width: 968px) {
             .nav-container { height: 60px; padding: 0 15px; }
             .logo-icon { width: 140px; height: 35px; }
+            .tagline { display: none; }
             .mobile-toggle { display: block; }
             .nav-menu { position: fixed; top: 60px; left: 0; right: 0; background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); flex-direction: column; padding: 20px; gap: 0; transform: translateY(-100%); transition: transform 0.3s; }
             .nav-menu.open { transform: translateY(0); }
@@ -157,22 +170,21 @@
     <nav class="nav-header">
         <div class="nav-container">
             <a href="/" class="logo-link"><div class="logo-icon"></div></a>
+            <div class="tagline">Find Care. Compare Costs. Save Thousands.</div>
             <button class="mobile-toggle" id="mobileToggle">☰</button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="/" class="active">Home</a></li>
-                <li><a href="/resources.html">Resources</a></li>
-                <li><a href="/about.html">About</a></li>
+                <li><a href="/resources">Resources</a></li>
+                <li><a href="/about">About</a></li>
             </ul>
         </div>
     </nav>
     
-    <!-- Hero with Map -->
-    <section class="hero-section">
-        <div class="hero-content">
-            <h1><span class="highlight">Compare Hospital Prices</span><br>Save Thousands on Healthcare</h1>
-            <p>Find quality care at transparent prices in your area</p>
+    <!-- Map Section -->
+    <section class="map-section">
+        <div class="disclaimer">
+            <strong>⚠️ Important:</strong> Prices shown are estimates for comparison purposes only. Actual charges may vary. Please verify final costs with your healthcare provider and insurance company before receiving services.
         </div>
-        
         <div class="map-container">
             <div class="controls-bar">
                 <div class="control-group">
@@ -303,9 +315,9 @@
             <p>Medical billing errors are common. Wait for insurance processing, review carefully, and don't hesitate to negotiate. Ask about self-pay discounts or payment plans.</p>
         </div>
         
-        <a href="/resources.html" class="cta-button" style="display: block; text-align: center; margin-top: 50px;">Read Full Guide with 8 Money-Saving Strategies →</a>
+        <a href="/resources" class="cta-button" style="display: block; text-align: center; margin-top: 50px;">Read Full Guide with 8 Money-Saving Strategies →</a>
         
-        <!--
+        <!-- Interest Gauge -->
         <div class="interest-section">
             <h3>💡 Help Us Build Better Tools</h3>
             <p style="margin-bottom: 10px;"><strong>Would you use a tool that instantly compares prices across all providers in your zip code?</strong></p>
@@ -318,7 +330,6 @@
                 ✓ Thanks for your feedback!
             </div>
         </div>
-        -->
     </section>
     
     <!-- CTA -->
