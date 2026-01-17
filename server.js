@@ -122,6 +122,12 @@ app.get('/', (req, res) => {
 app.get('/thank-you', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'thank-you.html'));
 });
+app.get('/resources', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'resources.html'));
+});
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'about.html'));
+});
 
 // Email submission endpoint with validation
 app.post('/api/submit',
