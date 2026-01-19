@@ -388,29 +388,7 @@
     
     async function loadProcedures(){try{const r=await fetch('/api/procedures'),d=await r.json(),s=document.getElementById('procedureSelect');d.procedures.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});}catch(e){console.error(e);}}
     
-   function getUserLocation(){
-    if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(
-            p=>{
-                userLocation={lat:p.coords.latitude,lng:p.coords.longitude};
-                map.setView([userLocation.lat,userLocation.lng],11);
-                addUserMarker();
-                updateRadiusCircle();
-                updateLocationInfo();
-                fetchEntities();
-            },
-            e=>{
-                console.error('Geolocation error:',e);
-                document.getElementById('loading').style.display='none';
-                document.getElementById('locationInfo').textContent='📍 Enter your address above to find nearby facilities';
-            },
-            {enableHighAccuracy:false,timeout:10000,maximumAge:0}
-        );
-    }else{
-        document.getElementById('loading').style.display='none';
-        document.getElementById('locationInfo').textContent='📍 Enter your address above';
-    }
-}
+     function getUserLocation(){if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>{userLocation={lat:p.coords.latitude,lng:p.coords.longitude};map.setView([userLocation.lat,userLocation.lng],11);addUserMarker();updateRadiusCircle();updateLocationInfo();fetchEntities();},e=>{console.error(e);alert('Unable to get location. Enter address.');document.getElementById('loading').style.display='none';});}else{document.getElementById('loading').style.display='none';}}
     
     function addUserMarker(){if(userMarker)map.removeLayer(userMarker);userMarker=L.marker([userLocation.lat,userLocation.lng],{icon:L.divIcon({className:'user-marker',html:'<div style="background:#7cb342;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-size:1.2rem;">📍</div>',iconSize:[30,30]})}).addTo(map);}
     
