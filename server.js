@@ -219,6 +219,67 @@ app.post('/api/feedback',
   }
 );
 
+// Contact form endpoint with validation
+app.post('/api/contact',
+  submissionLimiter,
+  [
+    body('contactType').isIn(['feedback', 'advertisement inquiry', 'other']).withMessage('Invalid contact type'),
+    body('name').notEmpty().isLength({ max: 100 }).trim().escape().withMessage('Name is required'),
+    body('phone').notEmpty().matches(/^[\d\s\-\(\)\+\.]+$/).isLength({ max: 20 }).withMessage('Valid phone number required'),
+    body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
+    body('organizationName').optional().isLength({ max: 200 }).trim().escape(),
+    body('message').notEmpty().isLength({ max: 5000 }).trim().withMessage('Message is required'),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { contactType, name, phone, email, organizationName, message } = req.body;
+    const userIp = req.ip;
+
+    // Additional sanitization
+    const sanitizedName = sanitizeInput(name);
+    const sanitizedPhone = sanitizeInput(phone);
+    const sanitizedOrg = sanitizeInput(organizationName || '');
+    const sanitizedMessage = sanitizeInput(message);
+
+    try {
+      const queryText = `
+        INSERT INTO contact_submissions (contact_type, name, phone, email, organization_name, message, timestamp, ip)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING id
+      `;
+      
+      const values = [
+        contactType,
+        sanitizedName,
+        sanitizedPhone,
+        email,
+        sanitizedOrg,
+        sanitizedMessage,
+        new Date().toISOString(),
+        userIp
+      ];
+
+      const result = await pool.query(queryText, values);
+
+      console.log('New contact submission saved to DB. ID:', result.rows[0].id, {
+        contactType,
+        name: sanitizedName,
+        email
+      });
+
+      res.json({ success: true });
+
+    } catch (err) {
+      console.error('Database Error:', err);
+      res.status(500).json({ error: 'Internal server error saving contact form' });
+    }
+  }
+);
+
 // Protected admin routes
 app.get('/admin/submissions', requireAdminAuth, (req, res) => {
   res.json({
