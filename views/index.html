@@ -390,7 +390,7 @@
     
     document.getElementById('procedureSelect').addEventListener('change',e=>{currentProcedure=e.target.value;if(userLocation){document.getElementById('loading').style.display='block';fetchEntities();}});
     
-    document.getElementById('insuranceSelect').addEventListener('change',e=>{currentInsurance=e.target.value;renderEntities();});
+    document.getElementById('insuranceSelect').addEventListener('change',e=>{currentInsurance=e.target.value;renderEntities();if(selectedEntity){showDetails();}});
     
     async function recordInterest(response){document.querySelectorAll('.interest-buttons button').forEach(b=>{b.disabled=true;b.style.opacity='0.5';});document.getElementById('feedbackMessage').style.display='block';try{await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({interest:response,timestamp:new Date().toISOString()})});}catch(e){console.error(e);}}
 </script>
