@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Savings Guide: 8 Ways to Save Money | PriceDoctor</title>
+    <meta name="description" content="PriceDoctor.io About Page">
+    <meta name="keywords" content="healthcare costs, save money healthcare, HSA tips, medical bills, price transparency, CPT codes">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E51TS36VZN"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-E51TS36VZN');
+    </script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+        
+        .nav-header { background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .logo-link { display: flex; align-items: center; text-decoration: none; }
+        .logo-icon { width: 180px; height: 45px; background: url('/logo.svg') no-repeat center; background-size: contain; }
+        .nav-menu { display: flex; list-style: none; gap: 30px; }
+        .nav-menu a { color: white; text-decoration: none; font-weight: 500; padding: 8px 0; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .nav-menu a:hover, .nav-menu a.active { border-bottom-color: white; }
+        .mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+        
+        .article-hero { background: linear-gradient(135deg, #f0f8ff 0%, #e6f0fa 100%); padding: 60px 20px; text-align: center; }
+        .article-hero h1 { font-size: 2.5rem; color: #1e5a9e; margin-bottom: 15px; }
+        .article-hero .meta { color: #666; font-size: 1rem; }
+        
+        .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        
+        .tldr { background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%); padding: 25px; border-left: 5px solid #2d7ac7; margin-bottom: 40px; border-radius: 8px; }
+        .tldr strong { color: #1e5a9e; font-size: 1.1rem; }
+        
+        article h2 { margin-top: 50px; margin-bottom: 20px; color: #1e5a9e; font-size: 1.9rem; padding-bottom: 10px; border-bottom: 2px solid #e6f0fa; }
+        article h3 { margin-top: 30px; margin-bottom: 15px; color: #2d7ac7; font-size: 1.4rem; }
+        article p { margin-bottom: 20px; font-size: 1.05rem; color: #444; line-height: 1.8; }
+        article a { color: #2d7ac7; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+        article a:hover { border-bottom-color: #2d7ac7; }
+        article ol, article ul { margin-left: 30px; margin-bottom: 20px; }
+        article li { margin-bottom: 12px; color: #444; line-height: 1.7; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 30px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-radius: 8px; overflow: hidden; }
+        thead { background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); color: white; }
+        th { padding: 15px; text-align: left; font-weight: 600; }
+        td { padding: 15px; border-bottom: 1px solid #e6f0fa; }
+        tbody tr:hover { background: #f0f8ff; }
+        
+        .cta-box { background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); color: white; padding: 40px; border-radius: 12px; text-align: center; margin: 60px 0; }
+        .cta-box h2 { color: white; margin-bottom: 15px; }
+        .cta-box p { margin-bottom: 25px; font-size: 1.1rem; }
+        .cta-button { display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, #7cb342 0%, #8bc34a 100%); color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; transition: all 0.3s; }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(124, 179, 66, 0.4); }
+        
+        .faq-section { margin-top: 60px; }
+        .faq-item { margin-bottom: 30px; padding: 25px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .faq-item h3 { color: #1e5a9e; margin-bottom: 12px; font-size: 1.3rem; }
+        
+        @media (max-width: 968px) {
+            .nav-container { height: 60px; padding: 0 15px; }
+            .logo-icon { width: 140px; height: 35px; }
+            .mobile-toggle { display: block; }
+            .nav-menu { position: fixed; top: 60px; left: 0; right: 0; background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); flex-direction: column; padding: 20px; gap: 0; transform: translateY(-100%); transition: transform 0.3s; }
+            .nav-menu.open { transform: translateY(0); }
+            .nav-menu li { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .nav-menu a { display: block; padding: 15px 0; border: none !important; }
+            
+            .article-hero h1 { font-size: 1.8rem; }
+            article { padding: 0; }
+            table { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-header">
+        <div class="nav-container">
+            <a href="/" class="logo-link"><div class="logo-icon"></div></a>
+            <button class="mobile-toggle" id="mobileToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/resources" class="active">Resources</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="article-hero">
+        <h1>About PriceDoctor.io</h1>
+        <div class="meta">Staff Writer - PriceDoctor Team | Published December 17, 2024 | 8 min read</div>
+    </div>
+    
+    <div class="container">
+        <article>
+            <div class="tldr">
+                <strong>Quick Answer:</strong> PriceDoctor.io was founded to help people easily find and compare the price of nearby medical care in order to save money and time.
+            </div>
+            
+    </div>
+    
+    <script>
+        const mt=document.getElementById('mobileToggle'),nm=document.getElementById('navMenu');
+        mt.addEventListener('click',()=>{nm.classList.toggle('open');mt.textContent=nm.classList.contains('open')?'✕':'☰';});
+        nm.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{nm.classList.remove('open');mt.textContent='☰';}));
+    </script>
+</body>
+</html>
