@@ -409,7 +409,8 @@
     }else{
         document.getElementById('loading').style.display='none';
         document.getElementById('locationInfo').textContent='📍 Enter your address above';
-    }}
+    }
+}
     
     function addUserMarker(){if(userMarker)map.removeLayer(userMarker);userMarker=L.marker([userLocation.lat,userLocation.lng],{icon:L.divIcon({className:'user-marker',html:'<div style="background:#7cb342;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-size:1.2rem;">📍</div>',iconSize:[30,30]})}).addTo(map);}
     
