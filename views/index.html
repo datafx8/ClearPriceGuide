@@ -80,6 +80,11 @@
         .hospital-distance { font-size: 0.85rem; color: #999; margin-bottom: 10px; }
         .hospital-price { display: flex; align-items: center; gap: 10px; }
         .price-value { font-size: 1.4rem; font-weight: 700; color: #7cb342; }
+        .price-inactive { font-size: 1.1rem; font-weight: 600; color: #999; text-decoration: line-through; }
+        .price-label-small { font-size: 0.8rem; color: #888; }
+        .price-date { font-size: 0.75rem; color: #999; margin-top: 8px; }
+        .facility-link { display: inline-block; margin-top: 12px; padding: 8px 16px; background: #2d7ac7; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9rem; font-weight: 500; transition: background 0.2s; }
+        .facility-link:hover { background: #1e5a9e; }
         
         #map { flex: 1; position: relative; }
         .ad-placement { position: absolute; top: 20px; right: 20px; width: 300px; height: 250px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; border: 2px dashed #ddd; }
@@ -174,8 +179,8 @@
             <button class="mobile-toggle" id="mobileToggle">☰</button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="/" class="active">Home</a></li>
-                <li><a href="/resources">Resources</a></li>
-                <li><a href="/about">About</a></li>
+                <li><a href="/resources.html">Resources</a></li>
+                <li><a href="/about.html">About</a></li>
             </ul>
         </div>
     </nav>
@@ -195,6 +200,13 @@
                 <div class="control-group">
                     <label>Procedure:</label>
                     <select id="procedureSelect"><option value="">All Procedures</option></select>
+                </div>
+                <div class="control-group">
+                    <label>Insurance:</label>
+                    <select id="insuranceSelect">
+                        <option value="self" selected>Self-Pay Charges</option>
+                        <option value="standard">Standard Insurance Charges</option>
+                    </select>
                 </div>
                 <div class="control-group">
                     <label>Range:</label>
@@ -315,7 +327,7 @@
             <p>Medical billing errors are common. Wait for insurance processing, review carefully, and don't hesitate to negotiate. Ask about self-pay discounts or payment plans.</p>
         </div>
         
-        <a href="/resources" class="cta-button" style="display: block; text-align: center; margin-top: 50px;">Read Full Guide with 8 Money-Saving Strategies →</a>
+        <a href="/resources.html" class="cta-button" style="display: block; text-align: center; margin-top: 50px;">Read Full Guide with 8 Money-Saving Strategies →</a>
         
         <!-- Interest Gauge -->
         <div class="interest-section">
@@ -347,7 +359,7 @@
     mt.addEventListener('click',()=>{nm.classList.toggle('open');mt.textContent=nm.classList.contains('open')?'✕':'☰';});
     nm.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{nm.classList.remove('open');mt.textContent='☰';}));
     
-    let map,userLocation=null,currentRadius=25,currentProcedure='',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
+    let map,userLocation=null,currentRadius=25,currentProcedure='',currentInsurance='self',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
     
     window.addEventListener('DOMContentLoaded',()=>{
         initMap();loadProcedures();getUserLocation();
@@ -377,6 +389,8 @@
     document.getElementById('radiusSelect').addEventListener('change',e=>{currentRadius=parseInt(e.target.value);updateRadiusCircle();updateLocationInfo();if(userLocation){document.getElementById('loading').style.display='block';fetchEntities();}});
     
     document.getElementById('procedureSelect').addEventListener('change',e=>{currentProcedure=e.target.value;if(userLocation){document.getElementById('loading').style.display='block';fetchEntities();}});
+    
+    document.getElementById('insuranceSelect').addEventListener('change',e=>{currentInsurance=e.target.value;renderEntities();});
     
     async function recordInterest(response){document.querySelectorAll('.interest-buttons button').forEach(b=>{b.disabled=true;b.style.opacity='0.5';});document.getElementById('feedbackMessage').style.display='block';try{await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({interest:response,timestamp:new Date().toISOString()})});}catch(e){console.error(e);}}
 </script>
