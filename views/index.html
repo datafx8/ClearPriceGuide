@@ -380,13 +380,15 @@
     let map,userLocation=null,currentRadius=25,currentProcedure='',currentInsurance='self',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
     
 window.addEventListener('DOMContentLoaded',()=>{
-    // Wait a bit to ensure DOM is fully rendered
-    setTimeout(() => {
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
         initMap();
         loadProcedures();
         getUserLocation();
         document.getElementById('addressInput').addEventListener('keypress',e=>{if(e.key==='Enter')searchAddress();});
-    }, 100);
+    } else {
+        console.error('Map element not found');
+    }
 });
     
     function initMap(){map=L.map('map').setView([39.8283,-98.5795],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);}
