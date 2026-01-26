@@ -92,7 +92,7 @@ const pool = new Pool({
 
 // Security: Simple authentication for admin endpoints
 // In production, use proper authentication (JWT, OAuth, etc.)
-const ADMIN_KEY = process.env.ADMIN_KEY || 'change-this-in-production-12345';
+const ADMIN_KEY = process.env.ADMIN_KEY || 'change-this-in-production';
 
 function requireAdminAuth(req, res, next) {
   const authKey = req.headers['x-admin-key'] || req.query.key;
@@ -127,6 +127,9 @@ app.get('/resources', (req, res) => {
 });
 app.get('/about', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'about.html'));
+});
+app.get('/terms', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'terms.html'));
 });
 
 // Email submission endpoint with validation
