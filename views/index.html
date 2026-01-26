@@ -176,7 +176,7 @@
     
     <section class="map-section">
         <div class="disclaimer">
-            Prices shown are estimates for comparison purposes only. Actual charges may vary. Please verify final costs with your healthcare provider and insurance company before receiving services.
+            <strong>⚠️ Important:</strong> Prices shown are estimates for comparison purposes only. Actual charges may vary. Please verify final costs with your healthcare provider and insurance company before receiving services.
         </div>
         <div class="map-container">
             <div class="controls-bar">
@@ -446,54 +446,5 @@ window.addEventListener('DOMContentLoaded',()=>{
     
     async function recordInterest(response){document.querySelectorAll('.interest-buttons button').forEach(b=>{b.disabled=true;b.style.opacity='0.5';});document.getElementById('feedbackMessage').style.display='block';try{await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({interest:response,timestamp:new Date().toISOString()})});}catch(e){console.error(e);}}
     </script>
-
-    <!-- Cookie Consent Banner -->
-<div class="cookie-banner" id="cookieBanner">
-    <div class="cookie-content">
-        <div class="cookie-text">
-            <h3>🍪 We Value Your Privacy</h3>
-            <p>We use cookies to improve your experience and analyze site usage. <a href="/terms">Learn more</a></p>
-        </div>
-        <div class="cookie-buttons">
-            <button class="cookie-btn btn-accept-all" onclick="acceptAllCookies()">Accept All</button>
-            <button class="cookie-btn btn-necessary" onclick="acceptNecessaryCookies()">Necessary Only</button>
-            <button class="cookie-btn btn-customize" onclick="showCookieSettings()">Customize</button>
-        </div>
-    </div>
-</div>
-
-<script>
-// Check if user has already consented
-if (!localStorage.getItem('cookieConsent')) {
-    document.getElementById('cookieBanner').classList.add('show');
-}
-
-function acceptAllCookies() {
-    localStorage.setItem('cookieConsent', 'all');
-    document.getElementById('cookieBanner').classList.remove('show');
-    enableAnalytics();
-}
-
-function acceptNecessaryCookies() {
-    localStorage.setItem('cookieConsent', 'necessary');
-    document.getElementById('cookieBanner').classList.remove('show');
-}
-
-function enableAnalytics() {
-    // Your existing Google Analytics code will run
-    gtag('consent', 'update', {
-        'analytics_storage': 'granted'
-    });
-}
-</script>
 </body>
-<footer style="background: #f9fafb; padding: 40px 20px; text-align: center; border-top: 1px solid #ddd;">
-    <p style="color: #666; margin-bottom: 15px;">© 2026 PriceDoctor. All rights reserved.</p>
-    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-        <a href="/terms" style="color: #2d7ac7;">Terms of Service</a>
-        <a href="/terms" style="color: #2d7ac7;">Privacy Policy</a>
-        <a href="/terms" style="color: #2d7ac7;">Cookie Policy</a>
-        <a href="#" onclick="showCookieSettings(); return false;" style="color: #2d7ac7;">Cookie Settings</a>
-    </div>
-</footer>
 </html>
