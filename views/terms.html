@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Pages - PriceDoctor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #333; line-height: 1.6; }
+        
+        .nav-header { background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; }
+        
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        
+        .page-selector { display: flex; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .page-btn { padding: 12px 24px; background: #f0f8ff; border: 2px solid #2d7ac7; border-radius: 8px; cursor: pointer; font-weight: 600; color: #1e5a9e; transition: all 0.3s; }
+        .page-btn:hover { background: #2d7ac7; color: white; }
+        .page-btn.active { background: #2d7ac7; color: white; }
+        
+        .legal-page { display: none; }
+        .legal-page.active { display: block; }
+        
+        h1 { color: #1e5a9e; font-size: 2.2rem; margin-bottom: 10px; }
+        .last-updated { color: #666; font-size: 0.9rem; margin-bottom: 30px; font-style: italic; }
+        
+        h2 { color: #1e5a9e; font-size: 1.6rem; margin: 40px 0 20px 0; padding-top: 20px; border-top: 2px solid #e6f0fa; }
+        h2:first-of-type { border-top: none; padding-top: 0; }
+        
+        h3 { color: #2d7ac7; font-size: 1.2rem; margin: 25px 0 15px 0; }
+        
+        p { margin-bottom: 15px; color: #555; }
+        
+        ul, ol { margin: 15px 0 15px 30px; }
+        li { margin-bottom: 10px; color: #555; }
+        
+        .highlight-box { background: #fff9e6; border-left: 4px solid #ff9800; padding: 20px; margin: 25px 0; border-radius: 4px; }
+        .highlight-box strong { color: #e65100; }
+        
+        .contact-box { background: #f0f8ff; border: 2px solid #2d7ac7; padding: 20px; margin: 30px 0; border-radius: 8px; }
+        
+        a { color: #2d7ac7; text-decoration: none; font-weight: 500; }
+        a:hover { text-decoration: underline; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table td, table th { padding: 12px; text-align: left; border-bottom: 1px solid #e6f0fa; }
+        table th { background: #f0f8ff; color: #1e5a9e; font-weight: 600; }
+        
+        /* Cookie Consent Banner */
+        .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(30, 30, 30, 0.98); color: white; padding: 25px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.3); z-index: 10000; display: none; animation: slideUp 0.4s ease-out; }
+        .cookie-banner.show { display: block; }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .cookie-content { max-width: 1200px; margin: 0 auto; display: flex; gap: 30px; align-items: center; flex-wrap: wrap; }
+        .cookie-text { flex: 1; min-width: 300px; }
+        .cookie-text h3 { color: white; margin: 0 0 8px 0; font-size: 1.2rem; }
+        .cookie-text p { margin: 0; color: #ddd; font-size: 0.95rem; }
+        .cookie-text a { color: #8bc34a; }
+        
+        .cookie-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .cookie-btn { padding: 12px 28px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.3s; white-space: nowrap; }
+        .btn-accept-all { background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%); color: white; }
+        .btn-accept-all:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 187, 106, 0.4); }
+        .btn-necessary { background: #555; color: white; }
+        .btn-necessary:hover { background: #666; }
+        .btn-customize { background: transparent; color: white; border: 2px solid #888; }
+        .btn-customize:hover { border-color: white; }
+        
+        /* Cookie Preferences Modal */
+        .cookie-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10001; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .cookie-modal.show { display: flex; }
+        
+        .cookie-modal-content { background: white; border-radius: 12px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 40px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .cookie-modal-content h2 { margin-top: 0; }
+        
+        .cookie-category { border: 2px solid #e6f0fa; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .cookie-category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .cookie-category-header h3 { margin: 0; }
+        
+        .toggle-switch { position: relative; display: inline-block; width: 54px; height: 28px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .toggle-slider { background-color: #66bb6a; }
+        input:checked + .toggle-slider:before { transform: translateX(26px); }
+        input:disabled + .toggle-slider { opacity: 0.5; cursor: not-allowed; }
+        
+        .modal-buttons { display: flex; gap: 15px; margin-top: 30px; justify-content: flex-end; }
+        
+        @media (max-width: 768px) {
+            .cookie-content { flex-direction: column; align-items: stretch; }
+            .cookie-buttons { flex-direction: column; }
+            .cookie-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-header">
+        <div class="nav-container">
+            <a href="/" class="logo">PriceDoctor</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-selector">
+            <button class="page-btn active" onclick="showPage('tos')">Terms of Service</button>
+            <button class="page-btn" onclick="showPage('privacy')">Privacy Policy</button>
+            <button class="page-btn" onclick="showPage('cookies')">Cookie Policy</button>
+            <button class="page-btn" onclick="showCookieSettings()">Cookie Settings</button>
+        </div>
+        
+        <!-- TERMS OF SERVICE -->
+        <div id="tos" class="legal-page active">
+            <h1>Terms of Service</h1>
+            <p class="last-updated">Last Updated: January 26, 2026</p>
+            
+            <div class="highlight-box">
+                <strong>Important:</strong> Please read these Terms of Service carefully before using PriceDoctor. By accessing or using our website, you agree to be bound by these terms.
+            </div>
+            
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing and using PriceDoctor ("we," "us," or "our"), you accept and agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree to these terms, please do not use our service.</p>
+            
+            <h2>2. Description of Service</h2>
+            <p>PriceDoctor provides a healthcare price comparison platform that allows users to:</p>
+            <ul>
+                <li>Compare prices for medical procedures across different healthcare facilities</li>
+                <li>View estimated costs for both self-pay and insurance-based services</li>
+                <li>Access educational content about healthcare costs and savings strategies</li>
+                <li>Locate nearby healthcare providers</li>
+            </ul>
+            
+            <h2>3. Medical Disclaimer</h2>
+            <div class="highlight-box">
+                <strong>PriceDoctor is NOT a healthcare provider and does NOT provide medical advice, diagnosis, or treatment.</strong>
+                <p style="margin-top: 10px;">All information provided is for informational and comparison purposes only. You should always:</p>
+                <ul style="margin-top: 10px;">
+                    <li>Consult with qualified healthcare professionals for medical advice</li>
+                    <li>Verify all pricing information directly with healthcare facilities</li>
+                    <li>Confirm coverage details with your insurance provider</li>
+                    <li>Seek emergency medical care when appropriate</li>
+                </ul>
+            </div>
+            
+            <h2>4. Price Information Accuracy</h2>
+            <p><strong>Important Limitations:</strong></p>
+            <ul>
+                <li><strong>Estimates Only:</strong> All prices displayed are estimates based on publicly available data and may not reflect actual charges</li>
+                <li><strong>No Guarantee:</strong> We do not guarantee the accuracy, completeness, or timeliness of pricing information</li>
+                <li><strong>Subject to Change:</strong> Healthcare prices change frequently without notice</li>
+                <li><strong>Additional Costs:</strong> Displayed prices may not include all associated costs (e.g., anesthesia, labs, facility fees)</li>
+                <li><strong>Insurance Variance:</strong> Actual insurance coverage and out-of-pocket costs depend on your specific plan</li>
+                <li><strong>Verification Required:</strong> Always verify final costs with your healthcare provider and insurance company before receiving services</li>
+            </ul>
+            
+            <h2>5. Data Sources</h2>
+            <p>Pricing data is sourced from:</p>
+            <ul>
+                <li>Publicly available hospital price transparency files required by federal law</li>
+                <li>CMS (Centers for Medicare & Medicaid Services) data</li>
+                <li>Healthcare facility websites</li>
+                <li>Third-party data providers</li>
+            </ul>
+            <p>We update our data regularly but cannot guarantee real-time accuracy.</p>
+            
+            <h2>6. User Responsibilities</h2>
+            <p>You agree to:</p>
+            <ul>
+                <li>Provide accurate location information when using our service</li>
+                <li>Use the service for lawful purposes only</li>
+                <li>Not attempt to scrape, copy, or redistribute our data without permission</li>
+                <li>Not reverse engineer or attempt to access our systems improperly</li>
+                <li>Verify all information before making healthcare decisions</li>
+            </ul>
+            
+            <h2>7. Intellectual Property</h2>
+            <p>All content on PriceDoctor, including but not limited to text, graphics, logos, icons, images, and software, is the property of PriceDoctor or its content suppliers and is protected by United States and international copyright laws.</p>
+            
+            <h2>8. Limitation of Liability</h2>
+            <div class="highlight-box">
+                <strong>TO THE MAXIMUM EXTENT PERMITTED BY LAW:</strong>
+                <p style="margin-top: 10px;">PriceDoctor and its affiliates, officers, employees, agents, and partners SHALL NOT BE LIABLE for any:</p>
+                <ul style="margin-top: 10px;">
+                    <li>Indirect, incidental, special, consequential, or punitive damages</li>
+                    <li>Loss of profits, revenue, data, or use</li>
+                    <li>Personal injury or property damage</li>
+                    <li>Damages resulting from reliance on information provided</li>
+                    <li>Errors or omissions in pricing or facility information</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>You use this service at your own risk.</strong></p>
+            </div>
+            
+            <h2>9. Disclaimer of Warranties</h2>
+            <p>The service is provided "AS IS" and "AS AVAILABLE" without warranties of any kind, either express or implied, including but not limited to:</p>
+            <ul>
+                <li>Merchantability</li>
+                <li>Fitness for a particular purpose</li>
+                <li>Non-infringement</li>
+                <li>Accuracy or reliability of information</li>
+                <li>Uninterrupted or error-free operation</li>
+            </ul>
+            
+            <h2>10. Third-Party Links</h2>
+            <p>Our service may contain links to third-party websites or services (including healthcare facility websites). We are not responsible for the content, accuracy, or practices of any third-party sites. Access to third-party sites is at your own risk.</p>
+            
+            <h2>11. Modifications to Service and Terms</h2>
+            <p>We reserve the right to:</p>
+            <ul>
+                <li>Modify or discontinue the service at any time without notice</li>
+                <li>Update these Terms of Service at any time</li>
+                <li>Change pricing information display or features</li>
+            </ul>
+            <p>Continued use of the service after changes constitutes acceptance of the modified terms.</p>
+            
+            <h2>12. Geographic Limitations</h2>
+            <p>PriceDoctor is designed for users in the United States. We make no representation that information is appropriate or available for use in other locations.</p>
+            
+            <h2>13. Indemnification</h2>
+            <p>You agree to indemnify and hold harmless PriceDoctor and its affiliates from any claims, damages, losses, liabilities, and expenses arising from your use of the service or violation of these terms.</p>
+            
+            <h2>14. Governing Law</h2>
+            <p>These Terms shall be governed by and construed in accordance with the laws of the State of [Your State], without regard to its conflict of law provisions.</p>
+            
+            <h2>15. Contact Information</h2>
+            <div class="contact-box">
+                <p><strong>Questions about these Terms of Service?</strong></p>
+                <p>Email: legal@pricedoctor.io<br>
+                Address: [Your Business Address]</p>
+            </div>
+        </div>
+        
+        <!-- PRIVACY POLICY -->
+        <div id="privacy" class="legal-page">
+            <h1>Privacy Policy</h1>
+            <p class="last-updated">Last Updated: January 26, 2026</p>
+            
+            <div class="highlight-box">
+                <strong>Your Privacy Matters:</strong> This Privacy Policy explains how PriceDoctor collects, uses, and protects your personal information.
+            </div>
+            
+            <h2>1. Information We Collect</h2>
+            
+            <h3>1.1 Information You Provide</h3>
+            <ul>
+                <li><strong>Location Data:</strong> Address or zip code you enter to search for nearby facilities</li>
+                <li><strong>Geolocation Data:</strong> Precise location if you grant permission</li>
+                <li><strong>Search Queries:</strong> Procedures and filters you search for</li>
+                <li><strong>Feedback:</strong> Responses to surveys or feature interest questions</li>
+                <li><strong>Contact Information:</strong> Email if you contact us (voluntary)</li>
+            </ul>
+            
+            <h3>1.2 Automatically Collected Information</h3>
+            <ul>
+                <li><strong>Device Information:</strong> Browser type, operating system, device type</li>
+                <li><strong>Usage Data:</strong> Pages viewed, features used, time spent on site</li>
+                <li><strong>IP Address:</strong> Your internet protocol address</li>
+                <li><strong>Cookies:</strong> Small data files stored on your device (see Cookie Policy)</li>
+                <li><strong>Analytics Data:</strong> Aggregated usage patterns and statistics</li>
+            </ul>
+            
+            <h3>1.3 Information We Do NOT Collect</h3>
+            <div class="highlight-box">
+                <p><strong>We do NOT collect:</strong></p>
+                <ul style="margin-top: 10px;">
+                    <li>Your name (unless you provide it voluntarily)</li>
+                    <li>Social Security number</li>
+                    <li>Insurance policy numbers</li>
+                    <li>Medical records or health information</li>
+                    <li>Financial information or payment data</li>
+                    <li>Protected Health Information (PHI) as defined by HIPAA</li>
+                </ul>
+            </div>
+            
+            <h2>2. How We Use Your Information</h2>
+            <p>We use collected information to:</p>
+            <ul>
+                <li><strong>Provide Service:</strong> Display nearby facilities and pricing comparisons</li>
+                <li><strong>Improve Service:</strong> Analyze usage patterns to enhance features</li>
+                <li><strong>Personalize Experience:</strong> Remember your location and preferences</li>
+                <li><strong>Analytics:</strong> Understand how users interact with our platform</li>
+                <li><strong>Communication:</strong> Respond to inquiries or feedback (if you contact us)</li>
+                <li><strong>Legal Compliance:</strong> Comply with applicable laws and regulations</li>
+                <li><strong>Security:</strong> Detect and prevent fraud or abuse</li>
+            </ul>
+            
+            <h2>3. Legal Basis for Processing (GDPR)</h2>
+            <p>If you are in the European Economic Area, we process your data based on:</p>
+            <ul>
+                <li><strong>Consent:</strong> You have given clear consent (e.g., geolocation)</li>
+                <li><strong>Legitimate Interests:</strong> Processing is necessary for our legitimate business interests</li>
+                <li><strong>Contract:</strong> Processing is necessary to provide services you request</li>
+                <li><strong>Legal Obligation:</strong> Processing is required by law</li>
+            </ul>
+            
+            <h2>4. How We Share Your Information</h2>
+            
+            <h3>4.1 We Do NOT Sell Your Data</h3>
+            <p><strong>We do not sell, rent, or trade your personal information to third parties for marketing purposes.</strong></p>
+            
+            <h3>4.2 We May Share With:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Party</th>
+                        <th>Purpose</th>
+                        <th>Data Shared</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Analytics Providers</strong></td>
+                        <td>Track site performance</td>
+                        <td>Google Analytics (anonymized)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Service Providers</strong></td>
+                        <td>Hosting, infrastructure</td>
+                        <td>Technical data only</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Legal Authorities</strong></td>
+                        <td>Comply with legal obligations</td>
+                        <td>As required by law</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Business Transfers</strong></td>
+                        <td>Merger, acquisition, sale</td>
+                        <td>All collected data</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>5. Data Retention</h2>
+            <ul>
+                <li><strong>Session Data:</strong> Cleared when you close your browser</li>
+                <li><strong>Cookies:</strong> As specified in our Cookie Policy (typically 12-24 months)</li>
+                <li><strong>Analytics Data:</strong> Retained for up to 26 months (Google Analytics default)</li>
+                <li><strong>Feedback Data:</strong> Retained indefinitely in aggregated form</li>
+                <li><strong>Email Correspondence:</strong> Retained as long as necessary for business purposes</li>
+            </ul>
+            
+            <h2>6. Your Privacy Rights</h2>
+            
+            <h3>6.1 General Rights (All Users)</h3>
+            <ul>
+                <li><strong>Access:</strong> Request information about data we hold about you</li>
+                <li><strong>Correction:</strong> Request correction of inaccurate data</li>
+                <li><strong>Deletion:</strong> Request deletion of your data (subject to legal requirements)</li>
+                <li><strong>Opt-Out:</strong> Disable cookies or decline geolocation permissions</li>
+            </ul>
+            
+            <h3>6.2 California Privacy Rights (CCPA)</h3>
+            <p>California residents have additional rights:</p>
+            <ul>
+                <li>Right to know what personal information is collected</li>
+                <li>Right to know if personal information is sold or disclosed</li>
+                <li>Right to say no to the sale of personal information</li>
+                <li>Right to access your personal information</li>
+                <li>Right to equal service and price (no discrimination)</li>
+            </ul>
+            <p><strong>Note:</strong> We do not sell personal information.</p>
+            
+            <h3>6.3 European Privacy Rights (GDPR)</h3>
+            <p>EU/EEA residents have additional rights:</p>
+            <ul>
+                <li>Right to data portability</li>
+                <li>Right to restrict processing</li>
+                <li>Right to object to processing</li>
+                <li>Right to withdraw consent</li>
+                <li>Right to lodge a complaint with a supervisory authority</li>
+            </ul>
+            
+            <h3>6.4 How to Exercise Your Rights</h3>
+            <p>Email us at: <a href="mailto:datafx8@gmail.com">datafx8@gmail.com</a></p>
+            <p>We will respond within 30 days (or as required by applicable law).</p>
+            
+            <h2>7. Geolocation Data</h2>
+            <div class="highlight-box">
+                <strong>Location Permissions:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>We only access your location if you grant browser permission</li>
+                    <li>You can revoke this permission at any time in your browser settings</li>
+                    <li>Location data is used only to find nearby facilities</li>
+                    <li>We do not track your location over time</li>
+                    <li>Location data is not stored long-term</li>
+                </ul>
+            </div>
+            
+            <h2>8. Cookies and Tracking Technologies</h2>
+            <p>We use cookies and similar technologies. See our <a href="#" onclick="showPage('cookies'); return false;">Cookie Policy</a> for details.</p>
+            <p>You can manage cookie preferences using our <a href="#" onclick="showCookieSettings(); return false;">Cookie Settings</a> tool.</p>
+            
+            <h2>9. Third-Party Services</h2>
+            
+            <h3>Google Analytics</h3>
+            <p>We use Google Analytics to understand how users interact with our site. Google Analytics collects:</p>
+            <ul>
+                <li>Pages you visit</li>
+                <li>Time spent on site</li>
+                <li>Browser and device information</li>
+                <li>Geographic location (city-level only)</li>
+            </ul>
+            <p>Google's privacy policy: <a href="https://policies.google.com/privacy" target="_blank">https://policies.google.com/privacy</a></p>
+            <p>Opt out: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank">Google Analytics Opt-out Browser Add-on</a></p>
+            
+            <h3>OpenStreetMap</h3>
+            <p>Our maps are provided by OpenStreetMap. Their privacy policy: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank">OpenStreetMap Privacy Policy</a></p>
+            
+            <h2>10. Data Security</h2>
+            <p>We implement reasonable security measures to protect your data:</p>
+            <ul>
+                <li>HTTPS encryption for all data transmission</li>
+                <li>Secure hosting infrastructure</li>
+                <li>Regular security updates</li>
+                <li>Access controls and authentication</li>
+                <li>Data minimization (we collect only what's necessary)</li>
+            </ul>
+            <p><strong>However:</strong> No method of transmission over the internet is 100% secure. We cannot guarantee absolute security.</p>
+            
+            <h2>11. Children's Privacy</h2>
+            <p>PriceDoctor is not intended for children under 13. We do not knowingly collect information from children under 13. If we learn we have collected such information, we will delete it immediately.</p>
+            
+            <h2>12. International Data Transfers</h2>
+            <p>If you are outside the United States, your information may be transferred to and processed in the United States. By using our service, you consent to such transfers.</p>
+            
+            <h2>13. Do Not Track Signals</h2>
+            <p>Some browsers have "Do Not Track" features. We do not currently respond to Do Not Track signals, but you can control cookies through our Cookie Settings.</p>
+            
+            <h2>14. Changes to This Privacy Policy</h2>
+            <p>We may update this Privacy Policy from time to time. We will notify you of significant changes by:</p>
+            <ul>
+                <li>Posting the updated policy on this page</li>
+                <li>Updating the "Last Updated" date</li>
+                <li>Displaying a prominent notice on our website (for material changes)</li>
+            </ul>
+            
+            <h2>15. Contact Us</h2>
+            <div class="contact-box">
+                <p><strong>Privacy Questions or Concerns?</strong></p>
+                <p>Email: <a href="mailto:privacy@pricedoctor.io">privacy@pricedoctor.io</a><br>
+                Address: [Your Business Address]<br>
+                Phone: [Your Phone Number]</p>
+                <p style="margin-top: 15px;"><strong>Data Protection Officer (if required):</strong><br>
+                Email: dpo@pricedoctor.io</p>
+            </div>
+        </div>
+        
+        <!-- COOKIE POLICY -->
+        <div id="cookies" class="legal-page">
+            <h1>Cookie Policy</h1>
+            <p class="last-updated">Last Updated: January 26, 2026</p>
+            
+            <h2>1. What Are Cookies?</h2>
+            <p>Cookies are small text files stored on your device when you visit a website. They help websites remember your preferences and improve your experience.</p>
+            
+            <h2>2. How We Use Cookies</h2>
+            <p>PriceDoctor uses cookies for the following purposes:</p>
+            
+            <h3>2.1 Strictly Necessary Cookies (Always Active)</h3>
+            <p>These cookies are essential for the website to function and cannot be disabled:</p>
+            <ul>
+                <li><strong>Session Management:</strong> Remember your location search and preferences during your visit</li>
+                <li><strong>Security:</strong> Prevent fraud and abuse</li>
+                <li><strong>Cookie Consent:</strong> Remember your cookie preferences</li>
+            </ul>
+            
+            <h3>2.2 Analytics Cookies (Optional)</h3>
+            <p>These cookies help us understand how visitors use our site:</p>
+            <ul>
+                <li><strong>Google Analytics:</strong> Track page views, user behavior, and site performance</li>
+                <li><strong>Usage Statistics:</strong> Understand which features are most valuable</li>
+                <li><strong>Error Tracking:</strong> Identify and fix technical issues</li>
+            </ul>
+            <p><strong>You can disable these cookies using our Cookie Settings.</strong></p>
+            
+            <h3>2.3 Advertising Cookies (Currently Not Used)</h3>
+            <p>We do not currently use advertising cookies. If we implement them in the future, we will update this policy and request your consent.</p>
+            
+            <h2>3. Third-Party Cookies</h2>
+            <p>Some cookies are set by third-party services we use:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Cookie Purpose</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Google Analytics</td>
+                        <td>_ga, _gid - Track site usage</td>
+                        <td>2 years / 24 hours</td>
+                    </tr>
+                    <tr>
+                        <td>OpenStreetMap</td>
+                        <td>Map tile loading</td>
+                        <td>Session</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            </div>
+        </div>
+    </body>
+</html>
