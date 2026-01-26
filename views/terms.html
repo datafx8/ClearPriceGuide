@@ -100,18 +100,24 @@
     </style>
 </head>
 <body>
-    <nav class="nav-header">
+        <nav class="nav-header">
         <div class="nav-container">
-            <a href="/" class="logo">PriceDoctor</a>
+            <a href="/" class="logo-link"><div class="logo-icon"></div></a>
+            <div class="tagline">Find Care. Compare Costs. Save Thousands.</div>
+            <button class="mobile-toggle" id="mobileToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/resources">Resources</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
         </div>
-    </nav>
+        </nav>
     
     <div class="container">
         <div class="page-selector">
-            <button class="page-btn active" onclick="showPage('tos')">Terms of Service</button>
-            <button class="page-btn" onclick="showPage('privacy')">Privacy Policy</button>
-            <button class="page-btn" onclick="showPage('cookies')">Cookie Policy</button>
-            <button class="page-btn" onclick="showCookieSettings()">Cookie Settings</button>
+            <a href="#tos" class="page-btn active">Terms of Service</a>
+            <a href="#privacy" class="page-btn active">Privacy Policy</a>
+            <a href="#cookies" class="page-btn active">Cookie Policy</button>
         </div>
         
         <!-- TERMS OF SERVICE -->
@@ -442,7 +448,7 @@
             <h2>15. Contact Us</h2>
             <div class="contact-box">
                 <p><strong>Privacy Questions or Concerns?</strong></p>
-                <p>Email: <a href="mailto:privacy@pricedoctor.io">privacy@pricedoctor.io</a><br>
+                <p>Email: <a href="mailto:datafx8@gmail.com">datafx8@gmail.com</a><br>
                 Address: [Your Business Address]<br>
                 Phone: [Your Phone Number]</p>
                 <p style="margin-top: 15px;"><strong>Data Protection Officer (if required):</strong><br>
