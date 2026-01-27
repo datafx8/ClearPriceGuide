@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Pages - Cookie Policy - PriceDoctor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #333; line-height: 1.6; }
+        
+        .nav-header { background: linear-gradient(135deg, #1e5a9e 0%, #2d7ac7 100%); color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; }
+        .tagline { color: white; font-size: 1.1rem; font-weight: 500; white-space: nowrap; }
+        .nav-menu { display: flex; list-style: none; gap: 30px; }
+        .nav-menu a { color: white; text-decoration: none; font-weight: 500; padding: 8px 0; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .nav-menu a:hover, .nav-menu a.active { border-bottom-color: white; }
+        .mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+        
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        
+        .page-selector { display: flex; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .page-btn { padding: 12px 24px; background: #f0f8ff; border: 2px solid #2d7ac7; border-radius: 8px; cursor: pointer; font-weight: 600; color: #1e5a9e; transition: all 0.3s; }
+        .page-btn:hover { background: #2d7ac7; color: white; }
+        .page-btn.active { background: #2d7ac7; color: white; }
+        
+        .legal-page { display: none; }
+        .legal-page.active { display: block; }
+        
+        h1 { color: #1e5a9e; font-size: 2.2rem; margin-bottom: 10px; }
+        .last-updated { color: #666; font-size: 0.9rem; margin-bottom: 30px; font-style: italic; }
+        
+        h2 { color: #1e5a9e; font-size: 1.6rem; margin: 40px 0 20px 0; padding-top: 20px; border-top: 2px solid #e6f0fa; }
+        h2:first-of-type { border-top: none; padding-top: 0; }
+        
+        h3 { color: #2d7ac7; font-size: 1.2rem; margin: 25px 0 15px 0; }
+        
+        p { margin-bottom: 15px; color: #555; }
+        
+        ul, ol { margin: 15px 0 15px 30px; }
+        li { margin-bottom: 10px; color: #555; }
+        
+        .highlight-box { background: #fff9e6; border-left: 4px solid #ff9800; padding: 20px; margin: 25px 0; border-radius: 4px; }
+        .highlight-box strong { color: #e65100; }
+        
+        .contact-box { background: #f0f8ff; border: 2px solid #2d7ac7; padding: 20px; margin: 30px 0; border-radius: 8px; }
+        
+        a { color: #2d7ac7; text-decoration: none; font-weight: 500; }
+        a:hover { text-decoration: underline; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table td, table th { padding: 12px; text-align: left; border-bottom: 1px solid #e6f0fa; }
+        table th { background: #f0f8ff; color: #1e5a9e; font-weight: 600; }
+        
+    </style>
+</head>
+<body>
+    <nav class="nav-header">
+        <div class="nav-container">
+            <a href="/" class="logo-link"><div class="logo-icon"></div></a>
+            <div class="tagline">Find Care. Compare Costs. Save Thousands.</div>
+            <button class="mobile-toggle" id="mobileToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/resources">Resources</a></li>
+                <li><a href="/about" class="active">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="cookie" class="legal-page active">
+            
+            <h2>8. Cookies and Tracking Technologies</h2>
+            <p>We use cookies and similar technologies. See our <a href="#" onclick="showPage('cookies'); return false;">Cookie Policy</a> for details.</p>
+            <p>You can manage cookie preferences using our <a href="#" onclick="showCookieSettings(); return false;">Cookie Settings</a> tool.</p>
+            
+            <h2>9. Third-Party Services</h2>
+            
+            <h3>Google Analytics</h3>
+            <p>We use Google Analytics to understand how users interact with our site. Google Analytics collects:</p>
+            <ul>
+                <li>Pages you visit</li>
+                <li>Time spent on site</li>
+                <li>Browser and device information</li>
+                <li>Geographic location (city-level only)</li>
+            </ul>
+            <p>Google's privacy policy: <a href="https://policies.google.com/privacy" target="_blank">https://policies.google.com/privacy</a></p>
+            <p>Opt out: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank">Google Analytics Opt-out Browser Add-on</a></p>
+            
+            <h3>OpenStreetMap</h3>
+            <p>Our maps are provided by OpenStreetMap. Their privacy policy: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank">OpenStreetMap Privacy Policy</a></p>
+            
+            <h2>10. Data Security</h2>
+            <p>We implement reasonable security measures to protect your data:</p>
+            <ul>
+                <li>HTTPS encryption for all data transmission</li>
+                <li>Secure hosting infrastructure</li>
+                <li>Regular security updates</li>
+                <li>Access controls and authentication</li>
+                <li>Data minimization (we collect only what's necessary)</li>
+            </ul>
+            <p><strong>However:</strong> No method of transmission over the internet is 100% secure. We cannot guarantee absolute security.</p>
+            
+            <h2>11. Children's Privacy</h2>
+            <p>PriceDoctor is not intended for children under 13. We do not knowingly collect information from children under 13. If we learn we have collected such information, we will delete it immediately.</p>
+            
+            <h2>12. International Data Transfers</h2>
+            <p>If you are outside the United States, your information may be transferred to and processed in the United States. By using our service, you consent to such transfers.</p>
+            
+            <h2>13. Do Not Track Signals</h2>
+            <p>Some browsers have "Do Not Track" features. We do not currently respond to Do Not Track signals, but you can control cookies through our Cookie Settings.</p>
+            
+            <h2>14. Changes to This Privacy Policy</h2>
+            <p>We may update this Privacy Policy from time to time. We will notify you of significant changes by:</p>
+            <ul>
+                <li>Posting the updated policy on this page</li>
+                <li>Updating the "Last Updated" date</li>
+                <li>Displaying a prominent notice on our website (for material changes)</li>
+            </ul>
+            
+            <h2>15. Contact Us</h2>
+            <div class="contact-box">
+                <p><strong>Privacy Questions or Concerns?</strong></p>
+                <p>Email: <a href="mailto:datafx8@gmail.com">datafx8@gmail.com</a><br>
+                Address: [Your Business Address]<br>
+                Phone: [Your Phone Number]</p>
+                <p style="margin-top: 15px;"><strong>Data Protection Officer (if required):</strong><br>
+                Email: dpo@pricedoctor.io</p>
+            </div>
+        </div>
+        
+        <!-- COOKIE POLICY -->
+        <div id="cookies" class="legal-page">
+            <h1>Cookie Policy</h1>
+            <p class="last-updated">Last Updated: January 26, 2026</p>
+            
+            <h2>1. What Are Cookies?</h2>
+            <p>Cookies are small text files stored on your device when you visit a website. They help websites remember your preferences and improve your experience.</p>
+            
+            <h2>2. How We Use Cookies</h2>
+            <p>PriceDoctor uses cookies for the following purposes:</p>
+            
+            <h3>2.1 Strictly Necessary Cookies (Always Active)</h3>
+            <p>These cookies are essential for the website to function and cannot be disabled:</p>
+            <ul>
+                <li><strong>Session Management:</strong> Remember your location search and preferences during your visit</li>
+                <li><strong>Security:</strong> Prevent fraud and abuse</li>
+                <li><strong>Cookie Consent:</strong> Remember your cookie preferences</li>
+            </ul>
+            
+            <h3>2.2 Analytics Cookies (Optional)</h3>
+            <p>These cookies help us understand how visitors use our site:</p>
+            <ul>
+                <li><strong>Google Analytics:</strong> Track page views, user behavior, and site performance</li>
+                <li><strong>Usage Statistics:</strong> Understand which features are most valuable</li>
+                <li><strong>Error Tracking:</strong> Identify and fix technical issues</li>
+            </ul>
+            <p><strong>You can disable these cookies using our Cookie Settings.</strong></p>
+            
+            <h3>2.3 Advertising Cookies (Currently Not Used)</h3>
+            <p>We do not currently use advertising cookies. If we implement them in the future, we will update this policy and request your consent.</p>
+            
+            <h2>3. Third-Party Cookies</h2>
+            <p>Some cookies are set by third-party services we use:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Cookie Purpose</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Google Analytics</td>
+                        <td>_ga, _gid - Track site usage</td>
+                        <td>2 years / 24 hours</td>
+                    </tr>
+                    <tr>
+                        <td>OpenStreetMap</td>
+                        <td>Map tile loading</td>
+                        <td>Session</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
