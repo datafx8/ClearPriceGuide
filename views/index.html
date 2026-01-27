@@ -321,26 +321,31 @@
             document.getElementById('consentOverlay').style.display = 'none';
         }
 
-        async function acceptConsent() {
-            localStorage.setItem('siteConsent', 'accepted');
-            document.getElementById('consentOverlay').style.display = 'none';
-            
-            // Log consent to backend
-            try {
-                await fetch('/api/consent', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        consentType: 'terms_and_privacy',
-                        timestamp: new Date().toISOString(),
-                        userAgent: navigator.userAgent,
-                        page: window.location.pathname
-                    })
-                });
-            } catch(e) {
-                console.error('Failed to log consent:', e);
-            }
+    async function acceptConsent() {
+        localStorage.setItem('siteConsent', 'accepted');
+        document.getElementById('consentOverlay').style.display = 'none';
+        
+        // Log consent to backend
+        try {
+            await fetch('/api/consent', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    consentType: 'terms_and_privacy',
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    page: window.location.pathname
+                })
+            });
+        } catch(e) {
+            console.error('Failed to log consent:', e);
         }
+        
+        // Request location after consent
+        setTimeout(() => {
+            getUserLocation();
+        }, 300);
+    }
 
     function declineConsent() {
         alert('You must agree to our Terms and Privacy Policy to use this site.');
