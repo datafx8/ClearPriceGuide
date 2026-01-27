@@ -283,20 +283,7 @@
         <a href="/resources" class="cta-button" style="display: block; text-align: center; margin-top: 50px;">Read Our Guide with 8 Money-Saving Strategies →</a>
     </section>
 
-    <!-- Cookie Consent Banner -->
-<div class="cookie-banner" id="cookieBanner">
-    <div class="cookie-content">
-        <div class="cookie-text">
-            <h3>🍪 We Value Your Privacy</h3>
-            <p>We use cookies to improve your experience and analyze site usage. <a href="/cookies.html">Learn more</a></p>
-        </div>
-        <div class="cookie-buttons">
-            <button class="cookie-btn btn-accept-all" onclick="acceptAllCookies()">Accept All</button>
-            <button class="cookie-btn btn-necessary" onclick="acceptNecessaryCookies()">Necessary Only</button>
-            <button class="cookie-btn btn-customize" onclick="showCookieSettings()">Customize</button>
-        </div>
-    </div>
-</div>
+
     
     
     <div class="loading" id="loading"><div class="spinner"></div><p>Finding hospitals near you...</p></div>
@@ -375,7 +362,21 @@ window.addEventListener('DOMContentLoaded',()=>{
     
     async function recordInterest(response){document.querySelectorAll('.interest-buttons button').forEach(b=>{b.disabled=true;b.style.opacity='0.5';});document.getElementById('feedbackMessage').style.display='block';try{await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({interest:response,timestamp:new Date().toISOString()})});}catch(e){console.error(e);}}
     </script>
-
+    
+    <!-- Cookie Consent Banner -->
+<div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-content">
+        <div class="cookie-text">
+            <h3>🍪 We Value Your Privacy</h3>
+            <p>We use cookies to improve your experience and analyze site usage. <a href="/cookies.html">Learn more</a></p>
+        </div>
+        <div class="cookie-buttons">
+            <button class="cookie-btn btn-accept-all" onclick="acceptAllCookies()">Accept All</button>
+            <button class="cookie-btn btn-necessary" onclick="acceptNecessaryCookies()">Necessary Only</button>
+            <button class="cookie-btn btn-customize" onclick="showCookieSettings()">Customize</button>
+        </div>
+    </div>
+</div>
 <script>
 // Check if user has already consented
 if (!localStorage.getItem('cookieConsent')) {
