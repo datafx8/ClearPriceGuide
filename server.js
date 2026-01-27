@@ -135,7 +135,7 @@ app.get('/privacy', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'privacy.html'));
 });
 app.get('/cookie', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'privacy.html'));
+  res.sendFile(path.join(__dirname, 'views', 'cookie.html'));
 });
 
 
