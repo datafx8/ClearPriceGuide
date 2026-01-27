@@ -173,9 +173,32 @@
             .cookie-buttons { flex-direction: column; }
             .cookie-btn { width: 100%; }
         }
+        /* Consent Popup */
+        .consent-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .consent-popup { background: white; border-radius: 12px; max-width: 500px; width: 100%; padding: 40px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); text-align: center; }
+        .consent-popup h2 { color: #1e5a9e; margin-bottom: 20px; font-size: 1.8rem; }
+        .consent-popup p { color: #666; line-height: 1.6; margin-bottom: 25px; }
+        .consent-popup a { color: #2d7ac7; text-decoration: underline; }
+        .consent-buttons { display: flex; gap: 15px; margin-top: 30px; }
+        .consent-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-accept { background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%); color: white; }
+        .btn-accept:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,187,106,0.4); }
+        .btn-decline { background: #f5f5f5; color: #666; }
+        .btn-decline:hover { background: #e0e0e0; }
     </style>
 </head>
 <body>
+    <div class="consent-overlay" id="consentOverlay">
+    <div class="consent-popup">
+        <h2>Welcome to PriceDoctor</h2>
+        <p>By using our site, you agree to our <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
+        <p style="font-size: 0.9rem; color: #999;">We use cookies and collect location data to provide price comparisons. You can manage these preferences anytime.</p>
+        <div class="consent-buttons">
+            <button class="consent-btn btn-decline" onclick="declineConsent()">Decline</button>
+            <button class="consent-btn btn-accept" onclick="acceptConsent()">I Agree</button>
+        </div>
+    </div>
+    </div>
     <nav class="nav-header">
         <div class="nav-container">
             <a href="/" class="logo-link"><div class="logo-icon"></div></a>
@@ -290,24 +313,56 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
+    // Consent Management
+        if (localStorage.getItem('siteConsent') === 'accepted') {
+            document.getElementById('consentOverlay').style.display = 'none';
+        }
+
+    async function acceptConsent() {
+    localStorage.setItem('siteConsent', 'accepted');
+    document.getElementById('consentOverlay').style.display = 'none';
+    
+    // Log consent to backend
+    try {
+        await fetch('/api/consent', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                consentType: 'terms_and_privacy',
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                page: window.location.pathname
+            })
+        });
+    } catch(e) {
+        console.error('Failed to log consent:', e);
+        // Don't block user if logging fails
+    }
+}
+
+        function declineConsent() {
+            alert('You must agree to our Terms and Privacy Policy to use this site.');
+            window.location.href = 'https://www.google.com';
+        }
+
     const mt=document.getElementById('mobileToggle'),nm=document.getElementById('navMenu');
     mt.addEventListener('click',()=>{nm.classList.toggle('open');mt.textContent=nm.classList.contains('open')?'✕':'☰';});
     nm.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{nm.classList.remove('open');mt.textContent='☰';}));
     
     let map,userLocation=null,currentRadius=25,currentProcedure='',currentInsurance='self',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
     
-window.addEventListener('DOMContentLoaded',()=>{
-    const mapElement = document.getElementById('map');
-    if (mapElement) {
-        initMap();
-        loadProcedures();
-        getUserLocation();
-        document.getElementById('addressInput').addEventListener('keypress',e=>{if(e.key==='Enter')searchAddress();});
-    } else {
-        console.error('Map element not found');
-    }
-});
-    
+    window.addEventListener('DOMContentLoaded',()=>{
+        const mapElement = document.getElementById('map');
+        if (mapElement) {
+            initMap();
+            loadProcedures();
+            getUserLocation();
+            document.getElementById('addressInput').addEventListener('keypress',e=>{if(e.key==='Enter')searchAddress();});
+        } else {
+            console.error('Map element not found');
+        }
+    });
+        
     function initMap(){map=L.map('map').setView([39.8283,-98.5795],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);}
     
     async function loadProcedures(){try{const r=await fetch('/api/procedures'),d=await r.json(),s=document.getElementById('procedureSelect');d.procedures.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});}catch(e){console.error(e);}}
