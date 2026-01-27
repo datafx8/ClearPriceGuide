@@ -290,34 +290,47 @@ app.post('/api/contact',
   }
 );
 
-// /api/consent endpoint
-app.post('/api/consent', async (req, res) => {
+// Consent logging endpoint
+app.post('/api/consent',
+  submissionLimiter,  // Reuse your existing limiter
+  async (req, res) => {
     try {
+        // Get IP address (handle various proxy scenarios)
         const ipAddress = req.ip || 
-                         req.headers['x-forwarded-for']?.split(',')[0] || 
-                         req.connection.remoteAddress;
+                         req.headers['x-forwarded-for']?.split(',')[0]?.trim() || 
+                         req.headers['x-real-ip'] ||
+                         req.connection.remoteAddress ||
+                         req.socket.remoteAddress;
         
         const { consentType, timestamp, userAgent, page } = req.body;
         
-        // Insert consent log
-        await db.query(`
+        // Insert consent log into database
+        const query = `
             INSERT INTO consent_logs 
             (ip_address, consent_type, consent_date, user_agent, page_url, session_id)
             VALUES ($1, $2, $3, $4, $5, $6)
-        `, [
-            ipAddress,
-            consentType,
-            timestamp,
-            userAgent,
-            page,
-            req.sessionID || null
-        ]);
+            RETURNING id
+        `;
         
-        res.json({ success: true });
+        const values = [
+            ipAddress,
+            consentType || 'terms_and_privacy',
+            timestamp || new Date().toISOString(),
+            userAgent || req.headers['user-agent'],
+            page || '/',
+            req.sessionID || null
+        ];
+        
+        const result = await pool.query(query, values);
+        
+        console.log(`Consent logged: ID ${result.rows[0].id}, IP: ${ipAddress}`);
+        
+        res.json({ success: true, id: result.rows[0].id });
+        
     } catch (error) {
         console.error('Consent logging error:', error);
-        // Return success anyway - don't block user experience
-        res.json({ success: true });
+        // Return success anyway to not block user experience
+        res.status(200).json({ success: true, error: 'logged' });
     }
 });
 
