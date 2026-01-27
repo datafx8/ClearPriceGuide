@@ -189,15 +189,18 @@
 </head>
 <body>
     <div class="consent-overlay" id="consentOverlay">
-    <div class="consent-popup">
-        <h2>Welcome to PriceDoctor</h2>
-        <p>By using our site, you agree to our <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
-        <p style="font-size: 0.9rem; color: #999;">We use cookies and collect location data to provide price comparisons. You can manage these preferences anytime.</p>
-        <div class="consent-buttons">
-            <button class="consent-btn btn-decline" onclick="declineConsent()">Decline</button>
-            <button class="consent-btn btn-accept" onclick="acceptConsent()">I Agree</button>
+        <div class="consent-popup">
+            <h2>Welcome to PriceDoctor</h2>
+            <p><strong>Compare healthcare prices and save thousands.</strong></p>
+            <p style="font-size: 0.95rem; margin: 20px 0;">By using our site, you agree to our <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
+            <p style="font-size: 0.85rem; color: #999; background: #f9fafb; padding: 12px; border-radius: 6px; margin-bottom: 0;">
+                ℹ️ We use cookies and may request your location to show nearby facilities.
+            </p>
+            <div class="consent-buttons">
+                <button class="consent-btn btn-decline" onclick="declineConsent()">Decline</button>
+                <button class="consent-btn btn-accept" onclick="acceptConsent()">I Agree & Continue</button>
+            </div>
         </div>
-    </div>
     </div>
     <nav class="nav-header">
         <div class="nav-container">
@@ -313,37 +316,36 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
-    // Consent Management
+        // Consent Management
         if (localStorage.getItem('siteConsent') === 'accepted') {
             document.getElementById('consentOverlay').style.display = 'none';
         }
 
-    async function acceptConsent() {
-    localStorage.setItem('siteConsent', 'accepted');
-    document.getElementById('consentOverlay').style.display = 'none';
-    
-    // Log consent to backend
-    try {
-        await fetch('/api/consent', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                consentType: 'terms_and_privacy',
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent,
-                page: window.location.pathname
-            })
-        });
-    } catch(e) {
-        console.error('Failed to log consent:', e);
-        // Don't block user if logging fails
-    }
-}
-
-        function declineConsent() {
-            alert('You must agree to our Terms and Privacy Policy to use this site.');
-            window.location.href = 'https://www.google.com';
+        async function acceptConsent() {
+            localStorage.setItem('siteConsent', 'accepted');
+            document.getElementById('consentOverlay').style.display = 'none';
+            
+            // Log consent to backend
+            try {
+                await fetch('/api/consent', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        consentType: 'terms_and_privacy',
+                        timestamp: new Date().toISOString(),
+                        userAgent: navigator.userAgent,
+                        page: window.location.pathname
+                    })
+                });
+            } catch(e) {
+                console.error('Failed to log consent:', e);
+            }
         }
+
+    function declineConsent() {
+        alert('You must agree to our Terms and Privacy Policy to use this site.');
+        window.location.href = 'https://www.google.com';
+    }
 
     const mt=document.getElementById('mobileToggle'),nm=document.getElementById('navMenu');
     mt.addEventListener('click',()=>{nm.classList.toggle('open');mt.textContent=nm.classList.contains('open')?'✕':'☰';});
@@ -352,15 +354,17 @@
     let map,userLocation=null,currentRadius=25,currentProcedure='',currentInsurance='self',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
     
     window.addEventListener('DOMContentLoaded',()=>{
-        const mapElement = document.getElementById('map');
-        if (mapElement) {
-            initMap();
-            loadProcedures();
-            getUserLocation();
-            document.getElementById('addressInput').addEventListener('keypress',e=>{if(e.key==='Enter')searchAddress();});
-        } else {
-            console.error('Map element not found');
-        }
+    document.getElementById('loading').style.display='none'; // Hide loading immediately
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
+        initMap();
+        loadProcedures();
+        // Removed getUserLocation() - user enters address manually
+        document.getElementById('addressInput').addEventListener('keypress',e=>{if(e.key==='Enter')searchAddress();});
+        document.getElementById('locationInfo').textContent='📍 Enter your address above to find nearby facilities';
+    } else {
+        console.error('Map element not found');
+    }
     });
         
     function initMap(){map=L.map('map').setView([39.8283,-98.5795],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);}
