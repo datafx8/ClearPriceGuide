@@ -131,6 +131,13 @@ app.get('/about', (req, res) => {
 app.get('/terms', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'terms.html'));
 });
+app.get('/privacy', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'privacy.html'));
+});
+app.get('/cookie', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'privacy.html'));
+});
+
 
 // Email submission endpoint with validation
 app.post('/api/submit',
