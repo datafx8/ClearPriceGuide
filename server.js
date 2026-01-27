@@ -290,6 +290,37 @@ app.post('/api/contact',
   }
 );
 
+// /api/consent endpoint
+app.post('/api/consent', async (req, res) => {
+    try {
+        const ipAddress = req.ip || 
+                         req.headers['x-forwarded-for']?.split(',')[0] || 
+                         req.connection.remoteAddress;
+        
+        const { consentType, timestamp, userAgent, page } = req.body;
+        
+        // Insert consent log
+        await db.query(`
+            INSERT INTO consent_logs 
+            (ip_address, consent_type, consent_date, user_agent, page_url, session_id)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `, [
+            ipAddress,
+            consentType,
+            timestamp,
+            userAgent,
+            page,
+            req.sessionID || null
+        ]);
+        
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Consent logging error:', error);
+        // Return success anyway - don't block user experience
+        res.json({ success: true });
+    }
+});
+
 // Protected admin routes
 app.get('/admin/submissions', requireAdminAuth, (req, res) => {
   res.json({
