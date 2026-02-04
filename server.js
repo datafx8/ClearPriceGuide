@@ -467,12 +467,8 @@ app.post('/api/entities',
 app.get('/api/procedures', async (req, res) => {
   try {
     const query = `
-      SELECT DISTINCT procedure_type
-      FROM entities
-      WHERE procedure_type IS NOT NULL
-        AND procedure_type != ''
-        AND procedure_type != 'Health System'
-      ORDER BY procedure_type
+    SELECT DISTINCT description AS procedure_type
+    FROM codes
     `;
     
     const result = await pool.query(query);
