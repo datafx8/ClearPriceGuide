@@ -414,7 +414,7 @@ app.post('/api/entities',
         SELECT 
           e.id,
           e.name,
-          e.address,
+          e.street as address,
           e.latitude as lat,
           e.longitude as lng,
           e.phone,
@@ -429,7 +429,7 @@ app.post('/api/entities',
           e.sourcefile,      
           e.sourceline,      
           e.procedure_type,
-          e.parent_entity_id,
+          e.parent_place_id,
           p.name as parent_name,
           (
             3959 * acos(
@@ -438,8 +438,8 @@ app.post('/api/entities',
               sin(radians($1)) * sin(radians(e.latitude))
             )
           ) AS distance
-        FROM entities e
-        LEFT JOIN entities p ON e.parent_entity_id = p.id
+        FROM entities_view e
+        LEFT JOIN entities_view p ON e.parent_place_id = p.id
         ${whereClause}
           AND (
             3959 * acos(
