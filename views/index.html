@@ -97,7 +97,10 @@
         .hospital-marker { background: white; border: 3px solid #2d7ac7; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #2d7ac7; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer; }
         .hospital-marker:hover { transform: scale(1.1); }
         .hospital-marker.selected { background: #2d7ac7; color: white; transform: scale(1.15); }
-        
+        .filters-toggle { display: none; background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 5px; font-weight: 600; cursor: pointer; width: 100%; text-align: left; margin-bottom: 10px; }
+        .filters-toggle:after { content: '▼'; float: right; transition: transform 0.3s; }
+        .filters-toggle.open:after { transform: rotate(180deg); }
+        .additional-filters { display: flex; gap: 15px; flex-wrap: wrap; }
         @media (max-width: 968px) {
             .nav-container { height: 60px; padding: 0 15px; }
             .logo-icon { width: 140px; height: 35px; }
@@ -113,8 +116,8 @@
             .control-group input, .control-group select { min-width: 0; flex: 1; }
             
             .map-layout { flex-direction: column; height: auto; }
-            .sidebar { width: 100%; height: 400px; border-right: none; border-bottom: 1px solid #ddd; }
-            #map { height: 400px; }
+            .sidebar { width: 100%; height: 400px; border-right: none; border-bottom: 1px solid #ddd; order: 2; }
+            #map { height: 400px; order: 1; }
             .ad-placement { position: static; width: calc(100% - 40px); margin: 10px 20px; height: auto; min-height: 150px; }
             .detail-panel { left: 20px; right: 20px; bottom: 10px; max-height: 350px; }
             .detail-prices { flex-direction: column; gap: 15px; }
@@ -224,25 +227,28 @@
                     <input type="text" id="addressInput" placeholder="Enter address or zip">
                     <button onclick="searchAddress()">Search</button>
                 </div>
-                <div class="control-group">
-                    <label>Procedure:</label>
-                    <select id="procedureSelect"><option value="">All Procedures</option></select>
-                </div>
-                <div class="control-group">
-                    <label>Insurance:</label>
-                    <select id="insuranceSelect">
-                        <option value="self" selected>Self-Pay Charges</option>
-                        <option value="standard">Standard Insurance Charges</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label>Range:</label>
-                    <select id="radiusSelect">
-                        <option value="10">10 miles</option>
-                        <option value="25" selected>25 miles</option>
-                        <option value="50">50 miles</option>
-                        <option value="100">100 miles</option>
-                    </select>
+                <button class="filters-toggle" id="filtersToggle" onclick="toggleFilters()">Show Filters</button>
+                <div class="additional-filters" id="additionalFilters">
+                    <div class="control-group">
+                        <label>Procedure:</label>
+                        <select id="procedureSelect"><option value="">All Procedures</option></select>
+                    </div>
+                    <div class="control-group">
+                        <label>Insurance:</label>
+                        <select id="insuranceSelect">
+                            <option value="self" selected>Self-Pay Charges</option>
+                            <option value="standard">Standard Insurance Charges</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Range:</label>
+                        <select id="radiusSelect">
+                            <option value="10">10 miles</option>
+                            <option value="25" selected>25 miles</option>
+                            <option value="50">50 miles</option>
+                            <option value="100">100 miles</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
@@ -400,7 +406,21 @@
     
     function addUserMarker(){if(userMarker)map.removeLayer(userMarker);userMarker=L.marker([userLocation.lat,userLocation.lng],{icon:L.divIcon({className:'user-marker',html:'<div style="background:#7cb342;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-size:1.2rem;">📍</div>',iconSize:[30,30]})}).addTo(map);}
     
-    async function searchAddress(){const a=document.getElementById('addressInput').value.trim();if(!a){alert('Enter address');return;}document.getElementById('loading').style.display='block';try{const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(a)}&countrycodes=us&limit=1`),d=await r.json();if(d&&d.length>0){const res=d[0];userLocation={lat:parseFloat(res.lat),lng:parseFloat(res.lon)};map.setView([userLocation.lat,userLocation.lng],11);addUserMarker();updateRadiusCircle();updateLocationInfo();await fetchEntities();}else{document.getElementById('loading').style.display='none';alert('Address not found.');}}catch(e){console.error(e);document.getElementById('loading').style.display='none';}}
+    async function searchAddress(){const a=document.getElementById('addressInput').value.trim();if(!a){alert('Enter address');return;}document.getElementById('loading').style.display='block';try{const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(a)}&countrycodes=us&limit=1`),d=await r.json();
+       if(d&&d.length>0){
+        const res=d[0];
+        userLocation={lat:parseFloat(res.lat),lng:parseFloat(res.lon)};
+        
+        // Clear existing markers first
+        markers.forEach(m=>map.removeLayer(m));
+        markers=[];
+        
+        map.setView([userLocation.lat,userLocation.lng],11);
+        addUserMarker();
+        updateRadiusCircle();
+        updateLocationInfo();
+        await fetchEntities();
+    } else{document.getElementById('loading').style.display='none';alert('Address not found.');}}catch(e){console.error(e);document.getElementById('loading').style.display='none';}}
     
     function updateRadiusCircle(){if(radiusCircle)map.removeLayer(radiusCircle);if(userLocation)radiusCircle=L.circle([userLocation.lat,userLocation.lng],{color:'#2d7ac7',fillColor:'#2d7ac7',fillOpacity:0.1,radius:currentRadius*1609.34}).addTo(map);}
     
@@ -425,6 +445,20 @@
     function showDetails(){document.getElementById('detailName').textContent=selectedEntity.name;document.getElementById('detailAddress').textContent=selectedEntity.address;document.getElementById('detailDistance').textContent=`${selectedEntity.distance.toFixed(1)} miles`;const selfPrice=document.getElementById('detailPriceSelf');const insPrice=document.getElementById('detailPriceInsurance');selfPrice.textContent=selectedEntity.price_self?`${selectedEntity.price_self}`:'N/A';insPrice.textContent=selectedEntity.price?`${selectedEntity.price}`:'N/A';selfPrice.className=currentInsurance==='self'?'detail-price-value detail-price-active':'detail-price-value detail-price-inactive';insPrice.className=currentInsurance==='standard'?'detail-price-value detail-price-active':'detail-price-value detail-price-inactive';document.getElementById('detailPhone').textContent=selectedEntity.phone||'N/A';document.getElementById('detailRating').textContent=selectedEntity.rating?`${selectedEntity.rating}/5 ⭐`:'N/A';const priceDate=selectedEntity.pricedate?new Date(selectedEntity.pricedate).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):'N/A';document.getElementById('detailPriceDate').textContent=priceDate;const link=document.getElementById('detailFacilityLink');if(selectedEntity.sourceurl){link.href=selectedEntity.sourceurl;link.style.display='inline-block';}else{link.style.display='none';}document.getElementById('detailPanel').classList.add('show');}
     
     function closeDetails(){document.getElementById('detailPanel').classList.remove('show');}
+
+    function toggleFilters() {
+    const filters = document.getElementById('additionalFilters');
+    const toggle = document.getElementById('filtersToggle');
+    if (filters.style.display === 'none' || filters.style.display === '') {
+        filters.style.display = 'flex';
+        toggle.classList.add('open');
+        toggle.textContent = 'Hide Filters';
+    } else {
+        filters.style.display = 'none';
+        toggle.classList.remove('open');
+        toggle.textContent = 'Show Filters';
+    }
+}
     
     document.getElementById('radiusSelect').addEventListener('change',e=>{currentRadius=parseInt(e.target.value);updateRadiusCircle();updateLocationInfo();if(userLocation){document.getElementById('loading').style.display='block';fetchEntities();}});
     
