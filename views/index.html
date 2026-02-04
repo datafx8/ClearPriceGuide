@@ -191,7 +191,8 @@
     <div class="consent-overlay" id="consentOverlay">
         <div class="consent-popup">
             <h2>Welcome to PriceDoctor</h2>
-            <p><strong>Compare healthcare prices and save thousands.</strong></p>
+            <p><strong>Find care, compare prices, and save thousands!</strong></p>
+            <p> Note: Prices shown are estimates for comparison purposes only and may vary. Check with your provider and insurance before receiving services.</p>
             <p style="font-size: 0.95rem; margin: 20px 0;">By using our site, you agree to our <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
             <p style="font-size: 0.85rem; color: #999; background: #f9fafb; padding: 12px; border-radius: 6px; margin-bottom: 0;">
                 ℹ️ We use cookies and may request your location to show nearby facilities.
@@ -216,9 +217,6 @@
     </nav>
     
     <section class="map-section">
-        <div class="disclaimer">
-            Prices shown are estimates for comparison purposes only. Actual charges may vary. Please verify final costs with your healthcare provider and insurance company before receiving services.
-        </div>
         <div class="map-container">
             <div class="controls-bar">
                 <div class="control-group">
@@ -410,7 +408,17 @@
     
     async function fetchEntities(){try{const r=await fetch('/api/entities',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lat:userLocation.lat,lng:userLocation.lng,radius:currentRadius,procedureType:currentProcedure})}),d=await r.json();entities=d.entities||[];document.getElementById('loading').style.display='none';renderEntities();}catch(e){console.error(e);document.getElementById('loading').style.display='none';}}
     
-    function renderEntities(){markers.forEach(m=>map.removeLayer(m));markers=[];const el=document.getElementById('hospitalList');el.innerHTML='';if(entities.length===0){el.innerHTML='<div style="padding:20px;text-align:center;color:#999;">No entities found. Try increasing radius.</div>';return;}entities.forEach(e=>{const displayPrice=currentInsurance==='self'?(e.price_self||0):(e.price||0);const m=L.marker([e.lat,e.lng],{icon:L.divIcon({className:'hospital-marker-wrapper',html:`<div class="hospital-marker" data-id="${e.id}">${displayPrice}</div>`,iconSize:[40,40]})}).addTo(map);m.on('click',()=>selectEntity(e.id));markers.push(m);const c=document.createElement('div');c.className='hospital-card';c.dataset.id=e.id;c.onclick=()=>selectEntity(e.id);const priceDate=e.pricedate?new Date(e.pricedate).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):'N/A';c.innerHTML=`<div class="hospital-name">${e.name}</div><div class="hospital-address">${e.address}</div><div class="hospital-distance">📍 ${e.distance.toFixed(1)} miles away</div><div class="hospital-price"><div class="price-box"><div class="price-label-small">Self-Pay</div><span class="${currentInsurance==='self'?'price-value':'price-inactive'}">${e.price_self||'N/A'}</span></div><div class="price-box"><div class="price-label-small">Insurance</div><span class="${currentInsurance==='standard'?'price-value':'price-inactive'}">${e.price||'N/A'}</span></div></div><div class="price-date">As of ${priceDate}</div>${e.sourceurl?`<a href="${e.sourceurl}" target="_blank" class="facility-link" onclick="event.stopPropagation()">Get Price Estimate From Facility</a>`:''}`;el.appendChild(c);});}
+    function renderEntities(){markers.forEach(m=>map.removeLayer(m));markers=[];const el=document.getElementById('hospitalList');el.innerHTML='';if(entities.length===0){el.innerHTML='<div style="padding:20px;text-align:center;color:#999;">No entities found. Try increasing radius.</div>';return;}entities.forEach(e=>{const displayPrice=currentInsurance==='self'?(e.price_self||0):(e.price||0);const m=L.marker([e.lat,e.lng],{icon:L.divIcon({className:'hospital-marker-wrapper',html:`<div class="hospital-marker" data-id="${e.id}">${displayPrice}</div>`,iconSize:[40,40]})}).addTo(map);m.on('click',()=>{
+    const card=document.querySelector(`.hospital-card[data-id="${e.id}"]`);
+    if(card){
+        document.querySelectorAll('.hospital-card').forEach(c=>c.classList.remove('selected'));
+        document.querySelectorAll('.hospital-marker').forEach(m=>m.classList.remove('selected'));
+        card.classList.add('selected');
+        document.querySelector(`.hospital-marker[data-id="${e.id}"]`).classList.add('selected');
+        card.scrollIntoView({behavior:'smooth',block:'center'});
+        map.setView([e.lat,e.lng],13);
+    }
+});markers.push(m);const c=document.createElement('div');c.className='hospital-card';c.dataset.id=e.id;c.onclick=()=>selectEntity(e.id);const priceDate=e.pricedate?new Date(e.pricedate).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):'N/A';c.innerHTML=`<div class="hospital-name">${e.name}</div><div class="hospital-address">${e.address}</div><div class="hospital-distance">📍 ${e.distance.toFixed(1)} miles away</div><div class="hospital-price"><div class="price-box"><div class="price-label-small">Self-Pay</div><span class="${currentInsurance==='self'?'price-value':'price-inactive'}">${e.price_self||'N/A'}</span></div><div class="price-box"><div class="price-label-small">Insurance</div><span class="${currentInsurance==='standard'?'price-value':'price-inactive'}">${e.price||'N/A'}</span></div></div><div class="price-date">As of ${priceDate}</div>${e.sourceurl?`<a href="${e.sourceurl}" target="_blank" class="facility-link" onclick="event.stopPropagation()">Get Price Estimate From Facility</a>`:''}`;el.appendChild(c);});}
     
     function selectEntity(id){selectedEntity=entities.find(h=>h.id===id);if(!selectedEntity)return;document.querySelectorAll('.hospital-card').forEach(c=>c.classList.toggle('selected',c.dataset.id==id));document.querySelectorAll('.hospital-marker').forEach(m=>m.classList.toggle('selected',m.dataset.id==id));const card=document.querySelector(`.hospital-card[data-id="${id}"]`);if(card){card.scrollIntoView({behavior:'smooth',block:'nearest'});}map.setView([selectedEntity.lat,selectedEntity.lng],13);showDetails();}
     
