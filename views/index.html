@@ -29,7 +29,7 @@
         .nav-menu { display: flex; list-style: none; gap: 30px; }
         .nav-menu a { color: white; text-decoration: none; font-weight: 500; padding: 8px 0; border-bottom: 2px solid transparent; transition: all 0.2s; }
         .nav-menu a:hover, .nav-menu a.active { border-bottom-color: white; }
-        .mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+        .mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; z-index: 100; position: relative; }
         
         .map-section { background: white; }
         .disclaimer { background: #fff9e6; border-left: 4px solid #ff9800; padding: 15px 20px; margin: 0; text-align: center; color: #666; font-size: 0.95rem; }
@@ -101,6 +101,7 @@
         .filters-toggle:after { content: '▼'; float: right; transition: transform 0.3s; }
         .filters-toggle.open:after { transform: rotate(180deg); }
         .additional-filters { display: flex; gap: 15px; flex-wrap: wrap; }
+        .filter-icon { display: none; }
         @media (max-width: 968px) {
             .nav-container { height: 60px; padding: 0 15px; }
             .logo-icon { width: 140px; height: 35px; }
@@ -116,8 +117,8 @@
             .control-group input, .control-group select { min-width: 0; flex: 1; }
             
             .map-layout { flex-direction: column; height: auto; }
-            .sidebar { width: 100%; height: 400px; border-right: none; border-bottom: 1px solid #ddd; order: 2; }
-            #map { height: 400px; order: 1; }
+            .sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #ddd; order: 2; }
+            #map { height: 500px; order: 1; }
             .ad-placement { position: static; width: calc(100% - 40px); margin: 10px 20px; height: auto; min-height: 150px; }
             .detail-panel { left: 20px; right: 20px; bottom: 10px; max-height: 350px; }
             .detail-prices { flex-direction: column; gap: 15px; }
@@ -226,12 +227,21 @@
     <section class="map-section">
         <div class="map-container">
             <div class="controls-bar">
-                <div class="control-group">
+                <div class="control-group" style="flex: 1;">
                     <label>📍</label>
                     <input type="text" id="addressInput" placeholder="Enter address or zip">
                     <button onclick="searchAddress()">Search</button>
+                    <button class="filter-icon" id="filterIconBtn" onclick="toggleFilters()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="4" y1="6" x2="20" y2="6"></line>
+                            <line x1="4" y1="12" x2="20" y2="12"></line>
+                            <line x1="4" y1="18" x2="20" y2="18"></line>
+                            <circle cx="7" cy="6" r="2" fill="white"></circle>
+                            <circle cx="14" cy="12" r="2" fill="white"></circle>
+                            <circle cx="17" cy="18" r="2" fill="white"></circle>
+                        </svg>
+                    </button>
                 </div>
-                <button class="filters-toggle" id="filtersToggle" onclick="toggleFilters()">Show Filters</button>
                 <div class="additional-filters" id="additionalFilters">
                     <div class="control-group">
                         <label>Procedure:</label>
@@ -260,7 +270,6 @@
                 <div class="sidebar">
                     <div class="sidebar-header">
                         <h2>Nearby Providers</h2>
-                        <div class="location-info" id="locationInfo">📍 Locating you...</div>
                     </div>
                     <div class="hospital-list" id="hospitalList"></div>
                 </div>
@@ -364,7 +373,7 @@
     mt.addEventListener('click',()=>{nm.classList.toggle('open');mt.textContent=nm.classList.contains('open')?'✕':'☰';});
     nm.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{nm.classList.remove('open');mt.textContent='☰';}));
     
-    let map,userLocation=null,currentRadius=25,currentProcedure='',currentInsurance='self',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
+    let map,userLocation=null,currentRadius=15,currentProcedure='',currentInsurance='self',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
     
     window.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('loading').style.display='none'; // Hide loading immediately
@@ -380,7 +389,7 @@
     }
     });
         
-    function initMap(){map=L.map('map').setView([39.8283,-98.5795],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);}
+    function initMap(){map=L.map('map').setView([39.8283,-98.5795],5);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);}
     
     async function loadProcedures(){try{const r=await fetch('/api/procedures'),d=await r.json(),s=document.getElementById('procedureSelect');d.procedures.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});}catch(e){console.error(e);}}
     
@@ -389,10 +398,9 @@
         navigator.geolocation.getCurrentPosition(
             p=>{
                 userLocation={lat:p.coords.latitude,lng:p.coords.longitude};
-                map.setView([userLocation.lat,userLocation.lng],11);
+                map.setView([userLocation.lat,userLocation.lng],12);
                 addUserMarker();
                 updateRadiusCircle();
-                updateLocationInfo();
                 fetchEntities();
             },
             e=>{
@@ -410,25 +418,44 @@
     
     function addUserMarker(){if(userMarker)map.removeLayer(userMarker);userMarker=L.marker([userLocation.lat,userLocation.lng],{icon:L.divIcon({className:'user-marker',html:'<div style="background:#7cb342;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-size:1.2rem;">📍</div>',iconSize:[30,30]})}).addTo(map);}
     
-    async function searchAddress(){const a=document.getElementById('addressInput').value.trim();if(!a){alert('Enter address');return;}document.getElementById('loading').style.display='block';try{const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(a)}&countrycodes=us&limit=1`),d=await r.json();
-       if(d&&d.length>0){
-        const res=d[0];
-        userLocation={lat:parseFloat(res.lat),lng:parseFloat(res.lon)};
+    async function searchAddress(){
+    const a=document.getElementById('addressInput').value.trim();
+    if(!a){alert('Enter address');return;}
+    
+    document.getElementById('loading').style.display='block';
+    
+    try{
+        const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(a)}&countrycodes=us&limit=1`);
+        const d=await r.json();
         
-        // Clear existing markers first
-        markers.forEach(m=>map.removeLayer(m));
-        markers=[];
-        
-        map.setView([userLocation.lat,userLocation.lng],11);
-        addUserMarker();
-        updateRadiusCircle();
-        updateLocationInfo();
-        await fetchEntities();
-    } else{document.getElementById('loading').style.display='none';alert('Address not found.');}}catch(e){console.error(e);document.getElementById('loading').style.display='none';}}
+        if(d&&d.length>0){
+            const res=d[0];
+            userLocation={lat:parseFloat(res.lat),lng:parseFloat(res.lon)};
+            
+            // Clear existing markers
+            markers.forEach(m=>map.removeLayer(m));
+            markers=[];
+            
+            // Update map view
+            map.setView([userLocation.lat,userLocation.lng],11);
+            addUserMarker();
+            updateRadiusCircle();
+            
+            // Fetch new entities
+            await fetchEntities();
+        } else {
+            document.getElementById('loading').style.display='none';
+            alert('Address not found. Please try again.');
+        }
+    } catch(e){
+        console.error('Search error:',e);
+        document.getElementById('loading').style.display='none';
+        alert('Search failed. Please check your connection and try again.');
+    }
+}
     
     function updateRadiusCircle(){if(radiusCircle)map.removeLayer(radiusCircle);if(userLocation)radiusCircle=L.circle([userLocation.lat,userLocation.lng],{color:'#2d7ac7',fillColor:'#2d7ac7',fillOpacity:0.1,radius:currentRadius*1609.34}).addTo(map);}
     
-    async function updateLocationInfo(){try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLocation.lat}&lon=${userLocation.lng}`),d=await r.json(),c=d.address.city||d.address.town||d.address.county||'Your Location';document.getElementById('locationInfo').textContent=`📍 ${c}, within ${currentRadius} miles`;}catch{document.getElementById('locationInfo').textContent=`📍 Within ${currentRadius} miles`;}}
     
     async function fetchEntities(){try{const r=await fetch('/api/entities',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lat:userLocation.lat,lng:userLocation.lng,radius:currentRadius,procedureType:currentProcedure})}),d=await r.json();entities=d.entities||[];document.getElementById('loading').style.display='none';renderEntities();}catch(e){console.error(e);document.getElementById('loading').style.display='none';}}
     
