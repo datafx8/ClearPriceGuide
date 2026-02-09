@@ -374,7 +374,13 @@
     nm.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{nm.classList.remove('open');mt.textContent='☰';}));
     
     let map,userLocation=null,currentRadius=15,currentProcedure='',currentInsurance='self',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
-    
+
+   function updateLocationInfo(){
+    const locInfo = document.getElementById('locationInfo');
+    if (!locInfo) return;
+    locInfo.textContent = `📍 Within ${currentRadius} miles`;
+    } 
+
     window.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('loading').style.display='none'; // Hide loading immediately
     const mapElement = document.getElementById('map');
@@ -425,7 +431,7 @@
     document.getElementById('loading').style.display='block';
     
     try{
-        const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(a)}&countrycodes=us&limit=1`);
+        const r=await fetch(`/api/geocode?address=${encodeURIComponent(a)}`),d=await r.json();
         const d=await r.json();
         
         if(d&&d.length>0){
