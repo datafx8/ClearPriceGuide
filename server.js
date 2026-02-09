@@ -28,6 +28,7 @@ app.use(helmet({
         "https://www.googletagmanager.com",
         "https://cdnjs.cloudflare.com"
       ],
+      formAction: ["'self'", "https://nominatim.openstreetmap.org"],
       scriptSrcAttr: ["'unsafe-inline'"],
       imgSrc: [
         "'self'", 
@@ -39,7 +40,8 @@ app.use(helmet({
       connectSrc: [
         "'self'", 
         "https://www.google-analytics.com",
-        "https://nominatim.openstreetmap.org"
+        "https://nominatim.openstreetmap.org",
+        "https://*.tile.openstreetmap.org"
       ],
     },
   },
@@ -375,6 +377,33 @@ function getTopZipCodes(data) {
     .map(([zip, count]) => ({ zipCode: zip, count }));
 }
 
+// Geocoding proxy endpoint
+app.get('/api/geocode', async (req, res) => {
+  const address = req.query.address;
+  
+  if (!address) {
+    return res.status(400).json({ error: 'Address parameter required' });
+  }
+  
+  try {
+    const fetch = require('node-fetch');
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=us&limit=1`,
+      {
+        headers: {
+          'User-Agent': 'PriceDoctor/1.0 (https://pricedoctor.io)'
+        }
+      }
+    );
+    
+    const data = await response.json();
+    res.json(data);
+    
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    res.status(500).json({ error: 'Geocoding failed' });
+  }
+});
 
 // Map page route
 app.get('/map', (req, res) => {
