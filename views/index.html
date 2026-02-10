@@ -394,26 +394,33 @@
     
     async function loadProcedures(){try{const r=await fetch('/api/procedures'),d=await r.json(),s=document.getElementById('procedureSelect');d.procedures.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});}catch(e){console.error(e);}}
     
-   function getUserLocation(){
+function getUserLocation(){
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(
             p=>{
                 userLocation={lat:p.coords.latitude,lng:p.coords.longitude};
-                map.setView([userLocation.lat,userLocation.lng],12);
+                map.setView([userLocation.lat,userLocation.lng],11);
                 addUserMarker();
                 updateRadiusCircle();
+                updateLocationInfo();
                 fetchEntities();
             },
             e=>{
                 console.error('Geolocation error:',e);
                 document.getElementById('loading').style.display='none';
-                document.getElementById('locationInfo').textContent='📍 Enter your address above to find nearby facilities';
+                const locInfo = document.getElementById('locationInfo');
+                if(locInfo){
+                    locInfo.textContent='📍 Enter your address above to find nearby facilities';
+                }
             },
             {enableHighAccuracy:false,timeout:10000,maximumAge:0}
         );
     }else{
         document.getElementById('loading').style.display='none';
-        document.getElementById('locationInfo').textContent='📍 Enter your address above';
+        const locInfo = document.getElementById('locationInfo');
+        if(locInfo){
+            locInfo.textContent='📍 Enter your address above';
+        }
     }
 }
     
