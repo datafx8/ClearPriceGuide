@@ -270,6 +270,7 @@
                 <div class="sidebar">
                     <div class="sidebar-header">
                         <h2>Nearby Providers</h2>
+                        <div class="location-info" id="locationInfo">📍 Locating you...</div>
                     </div>
                     <div class="hospital-list" id="hospitalList"></div>
                 </div>
@@ -374,13 +375,7 @@
     nm.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{nm.classList.remove('open');mt.textContent='☰';}));
     
     let map,userLocation=null,currentRadius=15,currentProcedure='',currentInsurance='self',entities=[],markers=[],selectedEntity=null,userMarker=null,radiusCircle=null;
-
-   function updateLocationInfo(){
-    const locInfo = document.getElementById('locationInfo');
-    if (!locInfo) return;
-    locInfo.textContent = `📍 Within ${currentRadius} miles`;
-    } 
-
+    
     window.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('loading').style.display='none'; // Hide loading immediately
     const mapElement = document.getElementById('map');
@@ -432,7 +427,6 @@
     
     try{
         const r=await fetch(`/api/geocode?address=${encodeURIComponent(a)}`),d=await r.json();
-        const d=await r.json();
         
         if(d&&d.length>0){
             const res=d[0];
