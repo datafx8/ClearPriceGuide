@@ -386,7 +386,6 @@ app.get('/api/geocode', async (req, res) => {
   }
   
   try {
-    const fetch = require('node-fetch');
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=us&limit=1`,
       {
