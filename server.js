@@ -498,9 +498,18 @@ app.post('/api/entities',
 app.get('/api/procedures', async (req, res) => {
   try {
     const query = `
-    SELECT DISTINCT description AS procedure_type
-    FROM codes
-    `;
+    SELECT DISTINCT display_description AS procedure_type
+    FROM codes c
+    inner join code_types ct on ct.code_type_id=c.code_type_id
+    where 
+    ct.name='HCPCS' and 
+    code in (
+    '36415',
+    '99202',
+    '99211',
+    '99281',
+    '99283'
+    );
     
     const result = await pool.query(query);
     res.json({ procedures: result.rows.map(row => row.procedure_type) });
